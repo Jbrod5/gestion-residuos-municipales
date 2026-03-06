@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Models\Usuario;
 
 class AuthService
 {
@@ -32,5 +34,22 @@ class AuthService
     public function logout(): void
     {
         Auth::logout();
+    }
+
+    /**
+     * Registra a un nuevo ciudadano en el sistema
+     * @param array $data Datos validados del formulario de registro
+     * @return Usuario
+     */
+    public function registrarCiudadano(array $data): Usuario
+    {
+        return Usuario::create([
+            'id_rol' => 4, // 4 corresponde a "Ciudadano" en RolSeeder
+            'nombre' => $data['nombre'],
+            'correo' => $data['correo'],
+            'telefono' => $data['telefono'] ?? null,
+            'password' => Hash::make($data['password']),
+            'activo' => 1,
+        ]);
     }
 }

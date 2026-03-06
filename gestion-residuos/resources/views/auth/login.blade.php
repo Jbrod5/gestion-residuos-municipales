@@ -33,7 +33,7 @@
                 </div>
                 
                 <div class="text-center mt-3">
-                    <span class="text-muted">¿No tienes cuenta?</span> <a href="#" class="text-decoration-none fw-bold">Regístrate</a>
+                    <span class="text-muted">¿No tienes cuenta?</span> <a href="{{ route('register') }}" class="text-decoration-none fw-bold">Regístrate</a>
                 </div>
             </form>
         </div>

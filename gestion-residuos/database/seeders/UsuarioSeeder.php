@@ -14,20 +14,14 @@ class UsuarioSeeder extends Seeder
      */
     public function run(): void
     {
-        // Crear el rol con ID 1 "Administrador" si no existe
-        $rolAdmin = Rol::firstOrCreate(
-            ['id_rol' => 1],
-            [
-                'nombre' => 'Administrador',
-                'descripcion' => 'Rol de prueba con privilegios máximos.'
-            ]
-        );
+        // Ejecutamos primero el seeder de roles para evitar llaves foraneas faltantes
+        $this->call(RolSeeder::class);
 
         // Crear el usuario con correo exacto del sistema
-        Usuario::firstOrCreate(
+        Usuario::updateOrCreate(
             ['correo' => 'admin@sistema.com'],
             [
-                'id_rol' => $rolAdmin->id_rol,
+                'id_rol' => 1, // 1 es Administrador Municipal según RolSeeder
                 'nombre' => 'Super Admin',
                 'password' => Hash::make('password123'),
                 'telefono' => '1234567890',
