@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+    
+        // Crea la tabla para manejar el caché de la aplicación
+    // Crea la tabla para los bloqueos de caché
     public function up(): void
     {
         Schema::create('cache', function (Blueprint $table) {
@@ -24,9 +24,7 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+        // Revierte la migración borrando las tablas creadas
     public function down(): void
     {
         Schema::dropIfExists('cache');
