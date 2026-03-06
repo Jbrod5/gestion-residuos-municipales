@@ -4,7 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model; // Added this line
+use Illuminate\Database\Eloquent\Model; 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -33,9 +33,12 @@ class Usuario extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'email',
+        'id_rol',
+        'nombre',
+        'correo',
         'password',
+        'telefono',
+        'activo',
     ];
 
     /**
@@ -59,5 +62,11 @@ class Usuario extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // cuando use sesiones, busque 'usuario_id'
+    public function getAuthIdentifierName()
+    {
+        return 'id_usuario';
     }
 }
