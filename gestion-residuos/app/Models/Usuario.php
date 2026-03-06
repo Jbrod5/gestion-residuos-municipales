@@ -4,13 +4,28 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model; // Added this line
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class Usuario extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+
+    protected $table = 'usuarios';
+    protected $primaryKey = 'id_usuario';
+
+    public function rol()
+    {
+        return $this->belongsTo(Rol::class, 'id_rol', 'id_rol');
+    }
+
+    public function cuadrillas()
+    {
+        return $this->belongsToMany(Cuadrilla::class, 'cuadrilla_trabajador', 'id_usuario', 'id_cuadrilla')
+                    ->withTimestamps();
+    }
 
     /**
      * The attributes that are mass assignable.

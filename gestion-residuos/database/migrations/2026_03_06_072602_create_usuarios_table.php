@@ -6,17 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+    
+    // Crea la tabla de usuarios registrados en el sistema
+    // Crea la tabla para recuperar contraseñas
+    // Crea la tabla para manejar sesiones de usuarios
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
+        Schema::create('usuarios', function (Blueprint $table) {
+            $table->id('id_usuario');
+            $table->foreignId('id_rol')->constrained('roles', 'id_rol');
+            $table->string('nombre');
+            $table->string('correo')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('telefono')->nullable();
+            $table->boolean('activo')->default(true);
             $table->rememberToken();
             $table->timestamps();
         });
@@ -29,7 +33,7 @@ return new class extends Migration
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
+            $table->foreignId('usuario_id')->nullable()->index();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
             $table->longText('payload');
@@ -37,12 +41,10 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+    // Revierte la migración borrando las tablas creadas
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('usuarios');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }
