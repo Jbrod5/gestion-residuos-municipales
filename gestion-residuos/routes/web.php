@@ -17,7 +17,15 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'register']);
 
-// Ruta protegida de ejemplo (Dashboard)
-Route::get('/dashboard', function () {
-    return "¡Bienvenido al Dashboard del Sistema!";
-})->middleware('auth')->name('dashboard');
+// Rutas para el Ciudadano (Módulo de Denuncias)
+Route::group(['prefix' => 'ciudadano', 'as' => 'ciudadano.', 'middleware' => 'auth'], function () {
+    // Hub principal
+    Route::get('/hub', function () {
+        return view('ciudadano.hub');
+    })->name('hub');
+
+    // Módulo de Denuncias
+    Route::get('/denuncias', [\App\Http\Controllers\Ciudadano\DenunciaController::class, 'index'])->name('denuncias.index');
+    Route::get('/denuncias/nueva', [\App\Http\Controllers\Ciudadano\DenunciaController::class, 'create'])->name('denuncias.create');
+    Route::post('/denuncias', [\App\Http\Controllers\Ciudadano\DenunciaController::class, 'store'])->name('denuncias.store');
+});

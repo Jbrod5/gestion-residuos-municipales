@@ -9,9 +9,15 @@ class Denuncia extends Model
     protected $table = 'denuncias';
     protected $primaryKey = 'id_denuncia';
     protected $fillable = [
-        'id_usuario', 'id_estado_denuncia', 'id_tamano_denuncia', 
-        'descripcion', 'fecha', 'foto_antes', 'foto_despues', 
-        'latitud', 'longitud'
+        'id_usuario', 
+        'id_estado_denuncia', 
+        'id_tamano_denuncia', 
+        'descripcion', 
+        'fecha', 
+        'foto_antes', 
+        'foto_despues', 
+        'latitud', 
+        'longitud'
     ];
 
     public function usuario()

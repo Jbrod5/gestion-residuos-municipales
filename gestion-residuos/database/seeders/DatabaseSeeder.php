@@ -15,7 +15,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Llamamos a nuestro seeder de usuarios que ya incluye la creación de roles
-        $this->call(UsuarioSeeder::class);
+        $this->call([
+            EstadoDenunciaSeeder::class,
+            TamanoDenunciaSeeder::class,
+            UsuarioSeeder::class,
+        ]);
     }
 }
