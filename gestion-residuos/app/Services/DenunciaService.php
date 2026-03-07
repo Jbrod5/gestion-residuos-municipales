@@ -31,12 +31,43 @@ class DenunciaService
         ]);
     }
 
-    // obtiene denuncias con sus relaciones de estado y tamano
-    public function obtenerDenunciasCiudadano()
+    // obtiene todas las denuncias del sistema para el admin con sus relaciones
+    public function listarTodas()
     {
-        return Denuncia::with(['estado', 'tamano'])
-            ->where('id_usuario', Auth::id())
+        return Denuncia::with(['usuario', 'estado', 'tamano'])
             ->orderBy('created_at', 'desc')
             ->get();
+    }
+
+    // obtiene solo las denuncias que pertenecen al ciudadano especificado
+    public function obtenerDenunciasCiudadano($id_usuario)
+    {
+        return Denuncia::with(['estado', 'tamano'])
+            ->where('id_usuario', $id_usuario)
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
+
+    // busca una denuncia especifica por su ID original municipal
+    public function obtenerDenunciaPorId($id_denuncia)
+    {
+        return Denuncia::with(['usuario', 'estado', 'tamano'])
+            ->findOrFail($id_denuncia);
+    }
+
+    // actualiza el estado de una denuncia especifica
+    public function actualizarEstado($id_denuncia, $id_estado_denuncia)
+    {
+        $denuncia = Denuncia::findOrFail($id_denuncia);
+        $denuncia->update([
+            'id_estado_denuncia' => $id_estado_denuncia
+        ]);
+        return $denuncia;
+    }
+
+    // obtiene el conteo total de denuncias para el dashboard
+    public function contarTodas()
+    {
+        return Denuncia::count();
     }
 }

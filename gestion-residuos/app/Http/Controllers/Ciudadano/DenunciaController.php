@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Ciudadano;
 use App\Http\Controllers\Controller;
 use App\Services\DenunciaService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DenunciaController extends Controller
 {
@@ -18,8 +19,21 @@ class DenunciaController extends Controller
     // muestra el listado de denuncias del ciudadano
     public function index()
     {
-        $denuncias = $this->denunciaService->obtenerDenunciasCiudadano();
+        $denuncias = $this->denunciaService->obtenerDenunciasCiudadano(\Auth::id());
         return view('ciudadano.denuncias.index', compact('denuncias'));
+    }
+
+    // muestra el detalle de una denuncia especifica validando propiedad
+    public function show($id_denuncia)
+    {
+        $denuncia = $this->denunciaService->obtenerDenunciaPorId($id_denuncia);
+
+        // validar que la denuncia sea del ciudadano autenticado
+        if ($denuncia->id_usuario !== \Auth::id()) {
+            abort(403, 'no tienes permiso para ver esta denuncia municipal');
+        }
+
+        return view('ciudadano.denuncias.show', compact('denuncia'));
     }
 
     // muestra el formulario para crear una nueva denuncia
@@ -29,7 +43,7 @@ class DenunciaController extends Controller
         return view('ciudadano.denuncias.create', compact('tamanos'));
     }
 
-    // guarda la nueva denuncia usando el service corregido
+    // guarda la nueva denuncia 
     public function store(Request $request)
     {
         $request->validate([

@@ -40,8 +40,7 @@
                                 </td>
                                 <td>{{ $denuncia->created_at->format('d/m/Y') }}</td>
                                 <td>
-                                    <!-- aqui podriamos poner un modal para ver detalles o foto -->
-                                    <button class="btn btn-sm btn-outline-primary">detalles</button>
+                                    <a href="{{ route('ciudadano.denuncias.show', $denuncia->id_denuncia) }}" class="btn btn-sm btn-outline-primary">ver detalles</a>
                                 </td>
                             </tr>
                         @empty
