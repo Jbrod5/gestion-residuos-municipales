@@ -13,6 +13,7 @@ class EstadoDenunciaSeeder extends Seeder
             ['id_estado_denuncia' => 1, 'nombre' => 'Pendiente', 'descripcion' => 'Denuncia recibida y esperando revisión'],
             ['id_estado_denuncia' => 2, 'nombre' => 'En Revisión', 'descripcion' => 'Un coordinador está evaluando la denuncia'],
             ['id_estado_denuncia' => 3, 'nombre' => 'Atendida', 'descripcion' => 'La limpieza del basurero ha sido completada'],
+            ['id_estado_denuncia' => 4, 'nombre' => 'En Proceso', 'descripcion' => 'Una cuadrilla ha sido asignada y está en camino'],
         ];
 
         foreach ($estados as $estado) {

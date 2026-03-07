@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class LogisticaService
 {
-    // crea una nueva cuadrilla municipal vinculada a camión y zona guatemalteca 2026
+    // crea una nueva cuadrilla municipal vinculada a camión y zona  
     public function crearCuadrilla(array $data)
     {
         return Cuadrilla::create([
@@ -20,7 +20,7 @@ class LogisticaService
         ]);
     }
 
-    // vincula empleados operativos a la cuadrilla usando la tabla pivot guatemalteca 2026
+    // vincula empleados operativos a la cuadrilla usando la tabla pivot  
     public function asignarEmpleadoACuadrilla($id_usuario, $id_cuadrilla)
     {
         $cuadrilla = Cuadrilla::findOrFail($id_cuadrilla);
@@ -28,7 +28,7 @@ class LogisticaService
         return true;
     }
 
-    // remueve un empleado de la cuadrilla municipal guatemalteca 2026
+    // remueve un empleado de la cuadrilla municipal  
     public function removerEmpleadoDeCuadrilla($id_usuario, $id_cuadrilla)
     {
         $cuadrilla = Cuadrilla::findOrFail($id_cuadrilla);

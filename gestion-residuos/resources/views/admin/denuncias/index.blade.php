@@ -7,8 +7,14 @@
     </div>
 
     @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
+        <div class="alert alert-success border-0 shadow-sm">
+            <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger border-0 shadow-sm">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ session('error') }}
         </div>
     @endif
 
@@ -38,7 +44,7 @@
                                     </span>
                                 </td>
                                 <td>{{ $denuncia->created_at->format('d/m/Y') }}</td>
-                                <td>
+                                <td class="d-flex gap-2">
                                     <form action="{{ route('admin.denuncias.update', $denuncia->id_denuncia) }}" method="POST" class="d-flex gap-2">
                                         @csrf
                                         @method('PATCH')
@@ -51,6 +57,46 @@
                                         </select>
                                         <button type="submit" class="btn btn-sm btn-outline-success">actualizar</button>
                                     </form>
+
+                                    @if($denuncia->id_estado_denuncia == 1 || $denuncia->id_estado_denuncia == 2)
+                                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalAsignar{{ $denuncia->id_denuncia }}">
+                                            asignar cuadrilla
+                                        </button>
+
+                                        <!-- Modal de Asignación -->
+                                        <div class="modal fade" id="modalAsignar{{ $denuncia->id_denuncia }}" tabindex="-1" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header bg-primary text-white">
+                                                        <h5 class="modal-title">asignar cuadrilla a denuncia #{{ $denuncia->id_denuncia }}</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <form action="{{ route('admin.asignaciones.store') }}" method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="id_denuncia" value="{{ $denuncia->id_denuncia }}">
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">seleccione cuadrilla disponible</label>
+                                                                <select name="id_cuadrilla" class="form-select" required>
+                                                                    <option value="" selected disabled>elija un equipo municipal</option>
+                                                                    @foreach($cuadrillasDisponibles as $cuadrilla)
+                                                                        <option value="{{ $cuadrilla->id_cuadrilla }}">
+                                                                            {{ $cuadrilla->nombre }} (Zona: {{ $cuadrilla->zona->nombre ?? 'N/A' }})
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                                <small class="text-muted d-block mt-2">solo se muestran cuadrillas marcadas como disponibles</small>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">cancelar</button>
+                                                            <button type="submit" class="btn btn-primary">confirmar asignación</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

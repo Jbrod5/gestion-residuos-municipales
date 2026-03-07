@@ -17,7 +17,7 @@ class CamionController extends Controller
         $this->logisticaService = $logisticaService;
     }
 
-    // listado de la flota municipal guatemalteca 2026
+    // listado de la flota municipal  
     public function index()
     {
         $camiones = Camion::with('estado')->get();

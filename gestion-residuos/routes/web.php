@@ -65,4 +65,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], fu
     Route::get('/cuadrillas/{id}/personal', [\App\Http\Controllers\Admin\CuadrillaController::class, 'personal'])->name('cuadrillas.personal');
     Route::post('/cuadrillas/{id}/personal', [\App\Http\Controllers\Admin\CuadrillaController::class, 'asignarPersonal'])->name('cuadrillas.asignar');
     Route::delete('/cuadrillas/{id_cuadrilla}/personal/{id_usuario}', [\App\Http\Controllers\Admin\CuadrillaController::class, 'desasignarPersonal'])->name('cuadrillas.desasignar');
+
+    // Asignación de Denuncias a Cuadrillas
+    Route::post('/asignaciones', [\App\Http\Controllers\Admin\AsignacionController::class, 'store'])->name('asignaciones.store');
 });

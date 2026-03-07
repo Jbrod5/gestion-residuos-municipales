@@ -70,4 +70,40 @@ class DenunciaService
     {
         return Denuncia::count();
     }
+
+    /**
+     * asigna una cuadrilla a una denuncia de forma atómica
+     * garantiza que la denuncia pase a 'En Proceso' y la cuadrilla se marque como ocupada
+     */
+    public function asignarCuadrilla($id_denuncia, $id_cuadrilla)
+    {
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($id_denuncia, $id_cuadrilla) {
+            $denuncia = Denuncia::findOrFail($id_denuncia);
+            $cuadrilla = \App\Models\Cuadrilla::findOrFail($id_cuadrilla);
+
+            // Validación de disponibilidad municipal
+            if (!$cuadrilla->disponible) {
+                throw new \Exception('la cuadrilla seleccionada no está disponible actualmente');
+            }
+
+            // 1. Crear el registro de asignación
+            \App\Models\AsignacionDenuncia::create([
+                'id_denuncia' => $id_denuncia,
+                'id_cuadrilla' => $id_cuadrilla,
+                'fecha_asignacion' => now(),
+            ]);
+
+            // 2. Actualizar estado de la denuncia a 'En Proceso' (ID 4)
+            $denuncia->update([
+                'id_estado_denuncia' => 4
+            ]);
+
+            // 3. Marcar cuadrilla como no disponible
+            $cuadrilla->update([
+                'disponible' => 0
+            ]);
+
+            return true;
+        });
+    }
 }

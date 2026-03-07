@@ -33,7 +33,7 @@ class CuadrillaController extends Controller
         return view('admin.cuadrillas.create', compact('camionesDisponibles', 'zonas'));
     }
 
-    // procesa la creación de la cuadrilla municipal guatemalteca 2026
+    // procesa la creación de la cuadrilla municipal  
     public function store(Request $request)
     {
         $request->validate([
@@ -45,10 +45,10 @@ class CuadrillaController extends Controller
         $this->logisticaService->crearCuadrilla($request->all());
 
         return redirect()->route('admin.cuadrillas.index')
-            ->with('success', 'cuadrilla municipal organizada con camión y zona guatemalteca 2026');
+            ->with('success', 'cuadrilla municipal organizada con camión y zona  ');
     }
 
-    // vista para asignar personal operativo a la cuadrilla municipal guatemalteca 2026
+    // vista para asignar personal operativo a la cuadrilla municipal  
     public function personal($id)
     {
         $cuadrilla = Cuadrilla::with('trabajadores')->findOrFail($id);
@@ -79,6 +79,6 @@ class CuadrillaController extends Controller
         $this->logisticaService->removerEmpleadoDeCuadrilla($id_usuario, $id_cuadrilla);
 
         return redirect()->back()
-            ->with('success', 'personal removido de la cuadrilla municipal guatemalteca 2026');
+            ->with('success', 'personal removido de la cuadrilla municipal  ');
     }
 }

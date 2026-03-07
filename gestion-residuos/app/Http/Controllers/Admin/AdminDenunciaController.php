@@ -27,7 +27,8 @@ class AdminDenunciaController extends Controller
     {
         $denuncias = $this->denunciaService->listarTodas();
         $estados = \App\Models\EstadoDenuncia::all();
-        return view('admin.denuncias.index', compact('denuncias', 'estados'));
+        $cuadrillasDisponibles = \App\Models\Cuadrilla::where('disponible', 1)->get();
+        return view('admin.denuncias.index', compact('denuncias', 'estados', 'cuadrillasDisponibles'));
     }
 
     // procesa el cambio de estado de una denuncia
