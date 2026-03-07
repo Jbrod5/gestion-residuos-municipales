@@ -52,4 +52,40 @@ class AuthService
             'activo' => 1,
         ]);
     }
+
+    // registra un usuario administrativo permitiendo elegir el rol municipal guatemalteco
+    public function crearUsuarioAdministrativo(array $data): Usuario
+    {
+        return Usuario::create([
+            'id_rol' => $data['id_rol'],
+            'nombre' => $data['nombre'],
+            'correo' => $data['correo'],
+            'telefono' => $data['telefono'] ?? null,
+            'password' => Hash::make($data['password']),
+            'activo' => 1,
+        ]);
+    }
+
+    // obtiene todos los usuarios con su respectivo rol de la base de datos
+    public function listarTodos()
+    {
+        return Usuario::with('rol')->get();
+    }
+
+    // desactiva la cuenta de un usuario para que no pueda entrar mas al sistema muni
+    public function desactivar($id_usuario)
+    {
+        $usuario = Usuario::findOrFail($id_usuario);
+        $usuario->update(['activo' => 0]);
+        return $usuario;
+    }
+
+    // permite crear un nuevo rol dinamicamente desde el panel administrativo
+    public function crearRol(array $data)
+    {
+        return \App\Models\Rol::create([
+            'nombre' => $data['nombre'],
+            'descripcion' => $data['descripcion'] ?? null
+        ]);
+    }
 }

@@ -37,8 +37,14 @@ class LoginController extends Controller
         if ($this->authService->login($request->correo, $request->password, $remember)) {
             $request->session()->regenerate();
 
-            // Redirige al dashboard o al home (ajustable)
-            return redirect()->intended('/dashboard');
+            $usuario = auth()->user();
+
+            // redireccionamiento dinámico según el rol municipal 
+            return match ($usuario->id_rol) {
+                    1 => redirect()->route('admin.dashboard'),
+                    4 => redirect()->route('ciudadano.hub'),
+                    default => redirect('/'),
+                };
         }
 
         // Si falla el login regresamos con un error de credenciales

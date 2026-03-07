@@ -39,4 +39,15 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], fu
     // Gestión de Denuncias
     Route::get('/denuncias', [\App\Http\Controllers\Admin\AdminDenunciaController::class, 'index'])->name('denuncias.index');
     Route::patch('/denuncias/{id_denuncia}/estado', [\App\Http\Controllers\Admin\AdminDenunciaController::class, 'updateStatus'])->name('denuncias.update');
+
+    // Gestión de Usuarios Municipales
+    Route::get('/usuarios', [\App\Http\Controllers\Admin\UsuarioController::class, 'index'])->name('usuarios.index');
+    Route::get('/usuarios/nuevo', [\App\Http\Controllers\Admin\UsuarioController::class, 'create'])->name('usuarios.create');
+    Route::post('/usuarios', [\App\Http\Controllers\Admin\UsuarioController::class, 'store'])->name('usuarios.store');
+    Route::delete('/usuarios/{id}', [\App\Http\Controllers\Admin\UsuarioController::class, 'destroy'])->name('usuarios.destroy');
+
+    // Gestión de Roles Dinámicos
+    Route::get('/roles', [\App\Http\Controllers\Admin\RolController::class, 'index'])->name('roles.index');
+    Route::get('/roles/nuevo', [\App\Http\Controllers\Admin\RolController::class, 'create'])->name('roles.create');
+    Route::post('/roles', [\App\Http\Controllers\Admin\RolController::class, 'store'])->name('roles.store');
 });
