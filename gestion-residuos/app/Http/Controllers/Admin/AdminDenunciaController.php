@@ -42,4 +42,22 @@ class AdminDenunciaController extends Controller
 
         return redirect()->back()->with('success', 'estado de la denuncia actualizado correctamente');
     }
+
+    /**
+     * finaliza la atención de una denuncia con evidencia visual
+     */
+    public function finalizar(Request $request, $id_denuncia)
+    {
+        $request->validate([
+            'foto_despues' => 'required|image|max:5120', // máximo 5MB para evidencia municipal
+        ]);
+
+        try {
+            $this->denunciaService->finalizarDenuncia($id_denuncia, $request->file('foto_despues'));
+
+            return redirect()->back()->with('success', 'denuncia finalizada y cuadrilla liberada exitosamente');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'error al finalizar: ' . $e->getMessage());
+        }
+    }
 }

@@ -97,6 +97,38 @@
                                             </div>
                                         </div>
                                     @endif
+
+                                    @if($denuncia->id_estado_denuncia == 4)
+                                        <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalFinalizar{{ $denuncia->id_denuncia }}">
+                                            finalizar denuncia
+                                        </button>
+
+                                        <!-- Modal de Finalización -->
+                                        <div class="modal fade" id="modalFinalizar{{ $denuncia->id_denuncia }}" tabindex="-1" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header bg-success text-white">
+                                                        <h5 class="modal-title">finalizar ciclo operativo #{{ $denuncia->id_denuncia }}</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <form action="{{ route('admin.denuncias.finalizar', $denuncia->id_denuncia) }}" method="POST" enctype="multipart/form-data">
+                                                        @csrf
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label class="form-label fw-bold">evidencia visual (foto después)</label>
+                                                                <input type="file" name="foto_despues" class="form-control" accept="image/*" required>
+                                                                <small class="text-muted d-block mt-2">suba una imagen clara del lugar ya limpio</small>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">cancelar</button>
+                                                            <button type="submit" class="btn btn-success">confirmar finalización</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

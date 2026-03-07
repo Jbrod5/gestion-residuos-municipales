@@ -68,4 +68,5 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], fu
 
     // Asignación de Denuncias a Cuadrillas
     Route::post('/asignaciones', [\App\Http\Controllers\Admin\AsignacionController::class, 'store'])->name('asignaciones.store');
+    Route::post('/denuncias/{id}/finalizar', [\App\Http\Controllers\Admin\AdminDenunciaController::class, 'finalizar'])->name('denuncias.finalizar');
 });

@@ -106,4 +106,43 @@ class DenunciaService
             return true;
         });
     }
+
+    /**
+     * finaliza la atención de una denuncia y libera a la cuadrilla asignada
+     */
+    public function finalizarDenuncia($id_denuncia, UploadedFile $fotoDespues)
+    {
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($id_denuncia, $fotoDespues) {
+            $denuncia = Denuncia::findOrFail($id_denuncia);
+            
+            // Buscar la asignación activa municipal
+            $asignacion = \App\Models\AsignacionDenuncia::where('id_denuncia', $id_denuncia)
+                ->whereNull('fecha_atencion')
+                ->latest()
+                ->firstOrFail();
+
+            $cuadrilla = \App\Models\Cuadrilla::findOrFail($asignacion->id_cuadrilla);
+
+            // 1. Guardar evidencia visual del trabajo municipal
+            $fotoPath = $fotoDespues->store('denuncias/evidencia', 'public');
+
+            // 2. Actualizar denuncia: marcar como 'Atendida' (ID 3) y subir foto
+            $denuncia->update([
+                'id_estado_denuncia' => 3,
+                'foto_despues' => $fotoPath
+            ]);
+
+            // 3. Liberar cuadrilla municipal para nuevos servicios
+            $cuadrilla->update([
+                'disponible' => 1
+            ]);
+
+            // 4. Registrar fecha de finalización en la asignación
+            $asignacion->update([
+                'fecha_atencion' => now()
+            ]);
+
+            return true;
+        });
+    }
 }
