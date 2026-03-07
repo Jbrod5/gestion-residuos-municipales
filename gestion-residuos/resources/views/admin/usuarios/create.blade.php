@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
 <div class="container py-4">
@@ -18,10 +18,11 @@
                                 <option value="" selected disabled>selecciona un rol</option>
                                 @foreach($roles as $rol)
                                     <option value="{{ $rol->id_rol }}" {{ old('id_rol') == $rol->id_rol ? 'selected' : '' }}>
-                                        {{ $rol->nombre }} - {{ $rol->descripcion }}
+                                        {{ $rol->nombre }}
                                     </option>
                                 @endforeach
                             </select>
+                            <small class="text-muted">asigne el cargo administrativo u operativo municipal</small>
                             @error('id_rol')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -30,6 +31,7 @@
                         <div class="mb-3">
                             <label for="nombre" class="form-label">nombre completo</label>
                             <input type="text" name="nombre" id="nombre" class="form-control @error('nombre') is-invalid @enderror" value="{{ old('nombre') }}" required>
+                            <small class="text-muted">ej: Juan Pérez</small>
                             @error('nombre')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -38,6 +40,7 @@
                         <div class="mb-3">
                             <label for="correo" class="form-label">correo electrónico</label>
                             <input type="email" name="correo" id="correo" class="form-control @error('correo') is-invalid @enderror" value="{{ old('correo') }}" required>
+                            <small class="text-muted">correo institucional del empleado municipal</small>
                             @error('correo')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -46,6 +49,7 @@
                         <div class="mb-3">
                             <label for="telefono" class="form-label">teléfono (opcional)</label>
                             <input type="text" name="telefono" id="telefono" class="form-control @error('telefono') is-invalid @enderror" value="{{ old('telefono') }}">
+                            <small class="text-muted">número de contacto directo</small>
                             @error('telefono')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -54,6 +58,7 @@
                         <div class="mb-3">
                             <label for="password" class="form-label">contraseña</label>
                             <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" required>
+                            <small class="text-muted">mínimo 8 caracteres para seguridad municipal</small>
                             @error('password')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -62,6 +67,7 @@
                         <div class="mb-3">
                             <label for="password_confirmation" class="form-label">confirmar contraseña</label>
                             <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" required>
+                            <small class="text-muted">repita la contraseña anterior</small>
                         </div>
 
                         <div class="d-grid gap-2">

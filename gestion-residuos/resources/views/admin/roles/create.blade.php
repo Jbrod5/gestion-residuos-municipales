@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
 <div class="container py-4">
@@ -17,6 +17,7 @@
                             <input type="text" name="nombre" id="nombre"
                                 class="form-control @error('nombre') is-invalid @enderror" value="{{ old('nombre') }}"
                                 required>
+                            <small class="text-muted">ej: Coordinador de Zona, Operador de Camión</small>
                             @error('nombre')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -26,6 +27,7 @@
                             <label for="descripcion" class="form-label">descripción de funciones</label>
                             <textarea name="descripcion" id="descripcion" rows="3"
                                 class="form-control @error('descripcion') is-invalid @enderror">{{ old('descripcion') }}</textarea>
+                            <small class="text-muted">explique brevemente las responsabilidades del nuevo rol municipal</small>
                             @error('descripcion')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror

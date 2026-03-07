@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             EstadoDenunciaSeeder::class,
             TamanoDenunciaSeeder::class,
             UsuarioSeeder::class,
+            ZonaSeeder::class,
         ]);
     }
 }

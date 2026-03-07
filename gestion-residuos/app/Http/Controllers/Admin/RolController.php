@@ -16,7 +16,7 @@ class RolController extends Controller
         $this->authService = $authService;
     }
 
-    // muestra el listado de roles municipales disponibles en el sistema guatemalteco 2026
+    // muestra el listado de roles municipales disponibles en el sistema  
     public function index()
     {
         $roles = Rol::all();

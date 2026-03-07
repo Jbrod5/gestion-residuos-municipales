@@ -50,4 +50,19 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], fu
     Route::get('/roles', [\App\Http\Controllers\Admin\RolController::class, 'index'])->name('roles.index');
     Route::get('/roles/nuevo', [\App\Http\Controllers\Admin\RolController::class, 'create'])->name('roles.create');
     Route::post('/roles', [\App\Http\Controllers\Admin\RolController::class, 'store'])->name('roles.store');
+
+    // Gestión de Logística: Camiones
+    Route::get('/camiones', [\App\Http\Controllers\Admin\CamionController::class, 'index'])->name('camiones.index');
+    Route::get('/camiones/nuevo', [\App\Http\Controllers\Admin\CamionController::class, 'create'])->name('camiones.create');
+    Route::post('/camiones', [\App\Http\Controllers\Admin\CamionController::class, 'store'])->name('camiones.store');
+    Route::get('/camiones/{id}/editar', [\App\Http\Controllers\Admin\CamionController::class, 'edit'])->name('camiones.edit');
+    Route::patch('/camiones/{id}', [\App\Http\Controllers\Admin\CamionController::class, 'update'])->name('camiones.update');
+
+    // Gestión de Logística: Cuadrillas
+    Route::get('/cuadrillas', [\App\Http\Controllers\Admin\CuadrillaController::class, 'index'])->name('cuadrillas.index');
+    Route::get('/cuadrillas/nueva', [\App\Http\Controllers\Admin\CuadrillaController::class, 'create'])->name('cuadrillas.create');
+    Route::post('/cuadrillas', [\App\Http\Controllers\Admin\CuadrillaController::class, 'store'])->name('cuadrillas.store');
+    Route::get('/cuadrillas/{id}/personal', [\App\Http\Controllers\Admin\CuadrillaController::class, 'personal'])->name('cuadrillas.personal');
+    Route::post('/cuadrillas/{id}/personal', [\App\Http\Controllers\Admin\CuadrillaController::class, 'asignarPersonal'])->name('cuadrillas.asignar');
+    Route::delete('/cuadrillas/{id_cuadrilla}/personal/{id_usuario}', [\App\Http\Controllers\Admin\CuadrillaController::class, 'desasignarPersonal'])->name('cuadrillas.desasignar');
 });

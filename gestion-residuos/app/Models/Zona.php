@@ -19,4 +19,9 @@ class Zona extends Model
     {
         return $this->hasMany(Ruta::class, 'id_zona', 'id_zona');
     }
+
+    public function cuadrillas()
+    {
+        return $this->hasMany(Cuadrilla::class, 'id_zona', 'id_zona');
+    }
 }
