@@ -95,4 +95,10 @@ Route::group(['prefix' => 'coordinator', 'as' => 'coordinator.', 'middleware' =>
     Route::get('/rutas/nueva', [\App\Http\Controllers\Coordinador\RutaController::class, 'create'])->name('rutas.create');
     Route::post('/rutas', [\App\Http\Controllers\Coordinador\RutaController::class, 'store'])->name('rutas.store');
     Route::get('/rutas/{id}', [\App\Http\Controllers\Coordinador\RutaController::class, 'show'])->name('rutas.show');
+
+    // Asignación de Rutas Municipal
+    Route::get('/asignaciones', [\App\Http\Controllers\Coordinador\AsignacionController::class, 'index'])->name('asignaciones.index');
+    Route::get('/asignaciones/nueva', [\App\Http\Controllers\Coordinador\AsignacionController::class, 'create'])->name('asignaciones.create');
+    Route::post('/asignaciones', [\App\Http\Controllers\Coordinador\AsignacionController::class, 'store'])->name('asignaciones.store');
+    Route::get('/api/disponibilidad-camiones', [\App\Http\Controllers\Coordinador\AsignacionController::class, 'apiDisponibilidad'])->name('api.disponibilidad');
 });

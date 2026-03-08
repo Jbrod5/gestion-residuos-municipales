@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             UsuarioSeeder::class,
             ZonaSeeder::class,
             MaterialSeeder::class,
+            EstadoAsignacionRutaSeeder::class,
         ]);
     }
 }
