@@ -62,7 +62,7 @@ class RutaController extends Controller
     }
 
     /**
-     * detalle de la ruta y sus puntos sembrados successo total
+     * detalle de la ruta y sus puntos sembrados  
      */
     public function show($id)
     {

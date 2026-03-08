@@ -102,3 +102,11 @@ Route::group(['prefix' => 'coordinator', 'as' => 'coordinator.', 'middleware' =>
     Route::post('/asignaciones', [\App\Http\Controllers\Coordinador\AsignacionController::class, 'store'])->name('asignaciones.store');
     Route::get('/api/disponibilidad-camiones', [\App\Http\Controllers\Coordinador\AsignacionController::class, 'apiDisponibilidad'])->name('api.disponibilidad');
 });
+
+// Rutas para el Operador de Punto Verde (Rol 3)
+Route::group(['prefix' => 'operador', 'as' => 'operador.', 'middleware' => ['auth', 'role:3']], function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Operador\OperadorController::class, 'dashboard'])->name('dashboard');
+    Route::get('/entrega/nueva', [\App\Http\Controllers\Operador\OperadorController::class, 'createEntrega'])->name('entrega.create');
+    Route::post('/entrega', [\App\Http\Controllers\Operador\OperadorController::class, 'storeEntrega'])->name('entrega.store');
+    Route::post('/vaciado/{id_contenedor}', [\App\Http\Controllers\Operador\OperadorController::class, 'solicitarVaciado'])->name('vaciado.solicitar');
+});

@@ -76,7 +76,7 @@ class PuntoVerdeController extends Controller
         $materiales = $this->puntoVerdeService->listarMateriales();
         $operadores = $this->puntoVerdeService->obtenerOperadoresDisponibles();
         $diasSemana = $this->puntoVerdeService->obtenerDiasSemana();
-        
+
         // mapear horarios para fácil acceso en la vista municipal success total
         $horariosActivos = $punto->horarios->keyBy('id_dia_semana');
         $contenedoresActivos = $punto->contenedores->keyBy('id_material');
@@ -87,7 +87,7 @@ class PuntoVerdeController extends Controller
     }
 
     /**
-     * actualiza la infraestructura de forma atómica successo total
+     * actualiza la infraestructura
      */
     public function update(Request $request, $id)
     {
@@ -119,14 +119,14 @@ class PuntoVerdeController extends Controller
     }
 
     /**
-     * borrado físico en cascada de la infraestructura successo total
+     * borrado físico en cascada de la infraestructura
      */
     public function destroy($id)
     {
         try {
             $this->puntoVerdeService->eliminarPuntoVerde($id);
             return redirect()->route('admin.puntos-verdes.index')
-                ->with('success', 'infraestructura eliminada correctamente successo total');
+                ->with('success', 'infraestructura eliminada correctamente');
         }
         catch (\Exception $e) {
             return redirect()->back()

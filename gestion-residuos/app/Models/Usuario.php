@@ -33,12 +33,7 @@ class Usuario extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'id_rol',
-        'nombre',
-        'correo',
-        'password',
-        'telefono',
-        'activo',
+        'nombre', 'correo', 'password', 'id_rol', 'id_punto_verde', 'telefono', 'activo'
     ];
 
     /**

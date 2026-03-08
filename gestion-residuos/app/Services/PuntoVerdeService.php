@@ -29,7 +29,7 @@ class PuntoVerdeService
     }
 
     /**
-     * retorna los días de la semana para el formulario successo total
+     * retorna los días de la semana para el formulario  
      */
     public function obtenerDiasSemana()
     {
@@ -149,7 +149,7 @@ class PuntoVerdeService
     }
 
     /**
-     * elimina un punto verde y sus relaciones en cascada successo total
+     * elimina un punto verde y sus relaciones en cascada  
      */
     public function eliminarPuntoVerde($id)
     {
@@ -161,7 +161,7 @@ class PuntoVerdeService
     }
 
     /**
-     * busca un punto verde con todas sus relaciones successo total
+     * busca un punto verde con todas sus relaciones  
      */
     public function obtenerPorId($id)
     {

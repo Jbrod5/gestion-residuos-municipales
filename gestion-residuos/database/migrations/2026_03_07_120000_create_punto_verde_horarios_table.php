@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * crea la tabla para horarios operativos de puntos verdes municipal
      */
@@ -22,7 +21,7 @@ return new class extends Migration
     }
 
     /**
-     * revierte la migración successo total
+     * revierte la migración  
      */
     public function down(): void
     {

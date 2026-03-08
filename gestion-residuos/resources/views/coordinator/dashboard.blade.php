@@ -6,13 +6,13 @@
         <div class="col-12">
             <h2 class="fw-bold text-dark">Panel Principal de Logística</h2>
             <p class="text-muted">Bienvenido, {{ auth()->user()->nombre }}. Gestione las rutas y la eficiencia de la
-                recolección municipal successo total.</p>
+                recolección municipal .</p>
         </div>
     </div>
 
     @php
-        $totalRutas = \App\Models\Ruta::count();
-        $totalPeso = \App\Models\PuntoRecoleccion::sum('volumen_estimado_kg');
+    $totalRutas = \App\Models\Ruta::count();
+    $totalPeso = \App\Models\PuntoRecoleccion::sum('volumen_estimado_kg');
     @endphp
 
     <div class="row mb-4">
@@ -63,7 +63,7 @@
                 </div>
                 <h4 class="fw-bold">Listado de Rutas</h4>
                 <p class="text-muted">Consulte y gestione las rutas existentes y sus puntos de recolección municipal
-                    successo total.</p>
+                    .</p>
                 <a href="{{ route('coordinator.rutas.index') }}" class="btn btn-dark w-100 fw-bold">VER LISTADO</a>
             </div>
         </div>
@@ -75,7 +75,7 @@
                 </div>
                 <h4 class="fw-bold text-muted">Asignación Camiones</h4>
                 <p class="text-muted">Asigne recolectores a las rutas definidas (Módulo 1 - próximamente) municipal
-                    successo total.</p>
+                    .</p>
                 <button class="btn btn-secondary w-100 fw-bold" disabled>PRÓXIMAMENTE</button>
             </div>
         </div>

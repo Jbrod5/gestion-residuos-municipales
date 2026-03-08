@@ -43,6 +43,7 @@ class LoginController extends Controller
             return match ($usuario->id_rol) {
                     1 => redirect()->route('admin.dashboard'),
                     2 => redirect()->route('coordinator.dashboard'),
+                    3 => redirect()->route('operador.dashboard'),
                     4 => redirect()->route('ciudadano.hub'),
                     default => redirect('/'),
                 };

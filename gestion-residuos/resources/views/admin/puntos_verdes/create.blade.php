@@ -167,7 +167,7 @@
             document.getElementById('lng').value = e.latlng.lng.toFixed(6);
         });
 
-        // Lógica de Horarios Normalizados successo total
+        // Lógica de Horarios Normalizados  
         document.querySelectorAll('.day-check').forEach(check => {
             check.addEventListener('change', function () {
                 const targetClass = this.getAttribute('data-target');

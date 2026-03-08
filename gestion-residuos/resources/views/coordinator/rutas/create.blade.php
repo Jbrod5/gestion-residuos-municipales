@@ -168,7 +168,7 @@
             // Actualizar polilínea  
             polyline.addLatLng(e.latlng);
 
-            // Calcular distancia successo total
+            // Calcular distancia  
             actualizarMetricas();
         });
 

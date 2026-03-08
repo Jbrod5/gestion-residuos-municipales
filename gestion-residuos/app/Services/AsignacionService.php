@@ -38,12 +38,11 @@ class AsignacionService
         return DB::transaction(function () use ($data) {
             $ruta = Ruta::findOrFail($data['id_ruta']);
             
-            // Estado 1 = Programada (según lógica estándar de sistema)
-            return AsignacionRuta::create([
+            $asignacion = AsignacionRuta::create([
                 'id_ruta' => $data['id_ruta'],
                 'id_camion' => $data['id_camion'],
                 'id_conductor' => $data['id_conductor'] ?? null,
-                'id_cuadrilla' => $data['id_cuadrilla'] ?? null, // Podría venir de relación camión-cuadrilla
+                'id_cuadrilla' => $data['id_cuadrilla'] ?? null,
                 'fecha' => $data['fecha'],
                 'id_estado_asignacion_ruta' => 1, 
                 'basura_estimada_ton' => $ruta->basura_total_estimada / 1000,
@@ -51,6 +50,17 @@ class AsignacionService
                 'hora_fin' => $data['hora_fin'] ?? null,
                 'notas_incidencias' => $data['notas_incidencias'] ?? null,
             ]);
+
+            // Reseteo de Punto Verde si aplica municipal
+            if ($ruta->id_punto_verde) {
+                $operadorService = app(OperadorService::class);
+                $contenedores = \App\Models\Contenedor::where('id_punto_verde', $ruta->id_punto_verde)->get();
+                foreach ($contenedores as $contenedor) {
+                    $operadorService->atenderVaciado($contenedor->id_contenedor);
+                }
+            }
+
+            return $asignacion;
         });
     }
 
