@@ -101,6 +101,10 @@ Route::group(['prefix' => 'coordinator', 'as' => 'coordinator.', 'middleware' =>
     Route::get('/asignaciones/nueva', [\App\Http\Controllers\Coordinador\AsignacionController::class, 'create'])->name('asignaciones.create');
     Route::post('/asignaciones', [\App\Http\Controllers\Coordinador\AsignacionController::class, 'store'])->name('asignaciones.store');
     Route::get('/api/disponibilidad-camiones', [\App\Http\Controllers\Coordinador\AsignacionController::class, 'apiDisponibilidad'])->name('api.disponibilidad');
+
+    // gestion de solicitudes de vaciado de puntos verdes
+    Route::get('/solicitudes-vaciado', [\App\Http\Controllers\Coordinador\CoordinadorController::class, 'index'])->name('solicitudes.index');
+    Route::post('/solicitudes-vaciado/{id_solicitud}/atender', [\App\Http\Controllers\Coordinador\CoordinadorController::class, 'atender'])->name('solicitudes.atender');
 });
 
 // Rutas para el Operador de Punto Verde (Rol 3)

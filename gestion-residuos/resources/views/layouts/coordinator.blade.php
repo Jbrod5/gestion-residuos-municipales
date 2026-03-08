@@ -69,6 +69,10 @@
                         <a class="nav-link {{ request()->routeIs('coordinator.asignaciones.*') ? 'active fw-bold text-warning' : '' }}"
                             href="{{ route('coordinator.asignaciones.index') }}">Asignación de Rutas</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('coordinator.solicitudes.*') ? 'active fw-bold text-warning' : '' }}"
+                            href="{{ route('coordinator.solicitudes.index') }}">Solicitudes de Vaciado</a>
+                    </li>
                 </ul>
 
                 <div class="d-flex align-items-center">
