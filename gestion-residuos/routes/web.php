@@ -82,3 +82,17 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], fu
     Route::patch('/puntos-verdes/{id}', [\App\Http\Controllers\Admin\PuntoVerdeController::class, 'update'])->name('puntos-verdes.update');
     Route::delete('/puntos-verdes/{id}', [\App\Http\Controllers\Admin\PuntoVerdeController::class, 'destroy'])->name('puntos-verdes.destroy');
 });
+
+// Rutas para el Coordinador de Rutas (Módulo 1)
+Route::group(['prefix' => 'coordinator', 'as' => 'coordinator.', 'middleware' => ['auth', 'role:2']], function () {
+    // Dashboard principal success total
+    Route::get('/dashboard', function () {
+        return view('coordinator.dashboard');
+    })->name('dashboard');
+
+    // Gestión de Rutas Municipal
+    Route::get('/rutas', [\App\Http\Controllers\Coordinador\RutaController::class, 'index'])->name('rutas.index');
+    Route::get('/rutas/nueva', [\App\Http\Controllers\Coordinador\RutaController::class, 'create'])->name('rutas.create');
+    Route::post('/rutas', [\App\Http\Controllers\Coordinador\RutaController::class, 'store'])->name('rutas.store');
+    Route::get('/rutas/{id}', [\App\Http\Controllers\Coordinador\RutaController::class, 'show'])->name('rutas.show');
+});

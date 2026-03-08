@@ -8,7 +8,18 @@ class Ruta extends Model
 {
     protected $table = 'rutas';
     protected $primaryKey = 'id_ruta';
-    protected $fillable = ['id_zona', 'id_tipo_residuo', 'nombre', 'poblacion_estimada', 'distancia_km'];
+    protected $fillable = [
+        'id_zona', 
+        'id_tipo_residuo', 
+        'nombre', 
+        'poblacion_estimada', 
+        'distancia_km',
+        'latitud_inicio',
+        'longitud_inicio',
+        'latitud_fin',
+        'longitud_fin',
+        'basura_total_estimada'
+    ];
 
     public function zona()
     {
@@ -27,8 +38,21 @@ class Ruta extends Model
                     ->withTimestamps();
     }
 
+    public function trayectorias()
+    {
+        return $this->hasMany(RutaTrayectoria::class, 'id_ruta', 'id_ruta')->orderBy('orden');
+    }
+
     public function puntosRecoleccion()
     {
         return $this->hasMany(PuntoRecoleccion::class, 'id_ruta', 'id_ruta')->orderBy('posicion_orden');
+    }
+
+    /**
+     * retorna el peso total suma de todos los puntos sembrados municipal
+     */
+    public function pesoTotalEstimadoKg()
+    {
+        return $this->puntosRecoleccion->sum('volumen_estimado_kg');
     }
 }

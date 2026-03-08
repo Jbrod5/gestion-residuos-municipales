@@ -94,13 +94,13 @@ class PuntoVerdeService
     }
 
     /**
-     * actualiza un punto verde y sincroniza sus relaciones municipal rotunda victoria
+     * actualiza un punto verde y sincroniza sus relaciones municipal  
      */
     public function actualizarPuntoVerde($id, array $data)
     {
         return DB::transaction(function () use ($id, $data) {
             $punto = PuntoVerde::findOrFail($id);
-            
+
             // 1. actualizar datos básicos
             $punto->update([
                 'id_encargado' => $data['id_encargado'],
@@ -131,14 +131,15 @@ class PuntoVerdeService
                 foreach ($data['contenedores'] as $id_material => $capacidad) {
                     if ($capacidad > 0) {
                         Contenedor::updateOrCreate(
-                            ['id_punto_verde' => $punto->id_punto_verde, 'id_material' => $id_material],
-                            ['capacidad_maxima_m3' => $capacidad]
+                        ['id_punto_verde' => $punto->id_punto_verde, 'id_material' => $id_material],
+                        ['capacidad_maxima_m3' => $capacidad]
                         );
-                    } else {
+                    }
+                    else {
                         // si la capacidad es 0, removemos el contenedor si existía municipal
                         Contenedor::where('id_punto_verde', $punto->id_punto_verde)
-                                  ->where('id_material', $id_material)
-                                  ->delete();
+                            ->where('id_material', $id_material)
+                            ->delete();
                     }
                 }
             }

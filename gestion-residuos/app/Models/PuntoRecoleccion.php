@@ -8,7 +8,7 @@ class PuntoRecoleccion extends Model
 {
     protected $table = 'puntos_recoleccion';
     protected $primaryKey = 'id_punto_recoleccion';
-    protected $fillable = ['id_ruta', 'posicion_orden', 'latitud', 'longitud'];
+    protected $fillable = ['id_ruta', 'posicion_orden', 'latitud', 'longitud', 'volumen_estimado_kg'];
 
     public function ruta()
     {

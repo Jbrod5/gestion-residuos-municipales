@@ -42,6 +42,7 @@ class LoginController extends Controller
             // redireccionamiento dinámico según el rol municipal 
             return match ($usuario->id_rol) {
                     1 => redirect()->route('admin.dashboard'),
+                    2 => redirect()->route('coordinator.dashboard'),
                     4 => redirect()->route('ciudadano.hub'),
                     default => redirect('/'),
                 };

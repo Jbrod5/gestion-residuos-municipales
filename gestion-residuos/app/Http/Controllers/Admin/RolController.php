@@ -40,6 +40,6 @@ class RolController extends Controller
         $this->authService->crearRol($request->all());
 
         return redirect()->route('admin.roles.index')
-            ->with('success', 'nuevo rol municipal registrado con exito rotundo y absoluto');
+            ->with('success', 'nuevo rol municipal registrado con exito');
     }
 }

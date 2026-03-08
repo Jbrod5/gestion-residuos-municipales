@@ -44,13 +44,13 @@ class UsuarioController extends Controller
         $this->authService->crearUsuarioAdministrativo($request->all());
 
         return redirect()->route('admin.usuarios.index')
-            ->with('success', 'usuario municipal creado correctamente de forma dinamica');
+            ->with('success', 'usuario municipal creado correctamente');
     }
 
     // desactiva un usuario para bloquear su acceso al sistema de residuos
     public function destroy($id)
     {
         $this->authService->desactivar($id);
-        return redirect()->back()->with('success', 'usuario desactivado con exito total');
+        return redirect()->back()->with('success', 'usuario desactivado con exito');
     }
 }

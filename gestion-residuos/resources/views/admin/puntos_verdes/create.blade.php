@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
     #map {
-        height: 400px;
+        height: 80vh;
         border-radius: 8px;
         border: 2px solid #dee2e6;
     }
@@ -15,9 +15,9 @@
     }
 </style>
 
-<div class="container py-4">
+<div class="container-fluid py-4">
     <div class="row justify-content-center">
-        <div class="col-md-10">
+        <div class="col-md-12">
             <div class="card shadow-sm">
                 <div class="card-header bg-success text-white">
                     <h5 class="mb-0">Registrar Punto Verde de Reciclaje</h5>
