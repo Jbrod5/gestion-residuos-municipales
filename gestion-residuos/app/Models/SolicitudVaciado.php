@@ -9,7 +9,13 @@ class SolicitudVaciado extends Model
     protected $table = 'solicitudes_vaciado';
     protected $primaryKey = 'id_solicitud';
     protected $fillable = [
-        'id_punto_verde', 'id_contenedor', 'estado', 'fecha_solicitud', 'fecha_atencion'
+        'id_punto_verde',
+        'id_contenedor',
+        'id_usuario',
+        'estado',
+        'volumen_m3',
+        'fecha_solicitud',
+        'fecha_atencion',
     ];
 
     public function puntoVerde()
@@ -20,5 +26,10 @@ class SolicitudVaciado extends Model
     public function contenedor()
     {
         return $this->belongsTo(Contenedor::class, 'id_contenedor', 'id_contenedor');
+    }
+
+    public function usuario()
+    {
+        return $this->belongsTo(Usuario::class, 'id_usuario', 'id_usuario');
     }
 }

@@ -326,7 +326,7 @@ CREATE TABLE `puntos_verde` (
   PRIMARY KEY (`id_punto_verde`),
   KEY `puntos_verde_id_encargado_foreign` (`id_encargado`),
   CONSTRAINT `puntos_verde_id_encargado_foreign` FOREIGN KEY (`id_encargado`) REFERENCES `usuarios` (`id_usuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 -- gestion_residuos.rutas definition
@@ -420,7 +420,7 @@ CREATE TABLE `contenedores` (
   KEY `contenedores_id_material_foreign` (`id_material`),
   CONSTRAINT `contenedores_id_material_foreign` FOREIGN KEY (`id_material`) REFERENCES `materiales` (`id_material`) ON DELETE CASCADE,
   CONSTRAINT `contenedores_id_punto_verde_foreign` FOREIGN KEY (`id_punto_verde`) REFERENCES `puntos_verde` (`id_punto_verde`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 -- gestion_residuos.cuadrilla_trabajador definition
@@ -458,7 +458,7 @@ CREATE TABLE `entregas_reciclaje` (
   CONSTRAINT `entregas_reciclaje_id_material_foreign` FOREIGN KEY (`id_material`) REFERENCES `materiales` (`id_material`) ON DELETE CASCADE,
   CONSTRAINT `entregas_reciclaje_id_punto_verde_foreign` FOREIGN KEY (`id_punto_verde`) REFERENCES `puntos_verde` (`id_punto_verde`) ON DELETE CASCADE,
   CONSTRAINT `entregas_reciclaje_id_usuario_foreign` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 -- gestion_residuos.punto_verde_horario definition
@@ -476,7 +476,7 @@ CREATE TABLE `punto_verde_horario` (
   KEY `punto_verde_horario_id_dia_semana_foreign` (`id_dia_semana`),
   CONSTRAINT `punto_verde_horario_id_dia_semana_foreign` FOREIGN KEY (`id_dia_semana`) REFERENCES `dias_semana` (`id_dia_semana`) ON DELETE CASCADE,
   CONSTRAINT `punto_verde_horario_id_punto_verde_foreign` FOREIGN KEY (`id_punto_verde`) REFERENCES `puntos_verde` (`id_punto_verde`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 -- gestion_residuos.puntos_recoleccion definition

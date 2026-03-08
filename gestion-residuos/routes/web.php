@@ -109,4 +109,5 @@ Route::group(['prefix' => 'operador', 'as' => 'operador.', 'middleware' => ['aut
     Route::get('/entrega/nueva', [\App\Http\Controllers\Operador\OperadorController::class, 'createEntrega'])->name('entrega.create');
     Route::post('/entrega', [\App\Http\Controllers\Operador\OperadorController::class, 'storeEntrega'])->name('entrega.store');
     Route::post('/vaciado/{id_contenedor}', [\App\Http\Controllers\Operador\OperadorController::class, 'solicitarVaciado'])->name('vaciado.solicitar');
+    Route::get('/historial', [\App\Http\Controllers\Operador\OperadorController::class, 'historial'])->name('historial.index');
 });

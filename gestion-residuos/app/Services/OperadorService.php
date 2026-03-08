@@ -40,11 +40,17 @@ class OperadorService
             // crear solicitud de vaciado automatica si llega a >= 90%
             $porcentaje = ($contenedor->nivel_actual_m3 / $contenedor->capacidad_maxima_m3) * 100;
             if ($porcentaje >= 90) {
-                SolicitudVaciado::firstOrCreate([
-                    'id_punto_verde' => $data['id_punto_verde'],
-                    'id_contenedor' => $contenedor->id_contenedor,
-                    'estado' => 'Pendiente'
-                ]);
+                SolicitudVaciado::firstOrCreate(
+                    [
+                        'id_punto_verde' => $data['id_punto_verde'],
+                        'id_contenedor' => $contenedor->id_contenedor,
+                        'estado' => 'Pendiente',
+                    ],
+                    [
+                        'id_usuario' => $data['id_usuario'] ?? null,
+                        'fecha_solicitud' => Carbon::now(),
+                    ]
+                );
             }
 
             return $entrega;
@@ -86,6 +92,7 @@ class OperadorService
     {
         return DB::transaction(function () use ($idContenedor) {
             $contenedor = Contenedor::findOrFail($idContenedor);
+            $volumenAntes = $contenedor->nivel_actual_m3;
             $contenedor->nivel_actual_m3 = 0;
             $contenedor->save();
 
@@ -93,7 +100,8 @@ class OperadorService
                 ->where('estado', 'Pendiente')
                 ->update([
                     'estado' => 'Atendida',
-                    'fecha_atencion' => Carbon::now()
+                    'fecha_atencion' => Carbon::now(),
+                    'volumen_m3' => $volumenAntes,
                 ]);
 
             return true;
@@ -101,12 +109,83 @@ class OperadorService
     }
 
     // crea una solicitud de vaciado manual desde el boton del operador
-    public function crearSolicitudVaciado($idContenedor, $idPuntoVerde)
+    public function crearSolicitudVaciado($idContenedor, $idPuntoVerde, $idUsuario = null)
     {
-        return SolicitudVaciado::firstOrCreate([
-            'id_punto_verde' => $idPuntoVerde,
-            'id_contenedor' => $idContenedor,
-            'estado' => 'Pendiente',
-        ]);
+        return SolicitudVaciado::firstOrCreate(
+            [
+                'id_punto_verde' => $idPuntoVerde,
+                'id_contenedor' => $idContenedor,
+                'estado' => 'Pendiente',
+            ],
+            [
+                'id_usuario' => $idUsuario,
+                'fecha_solicitud' => Carbon::now(),
+            ]
+        );
+    }
+
+    // obtiene un historial unificado de entradas y vaciados para el kardex del operador
+    public function obtenerHistorialMovimientos($idPuntoVerde, $fechaDesde = null, $fechaHasta = null, $limit = 50)
+    {
+        $desde = $fechaDesde
+            ? Carbon::parse($fechaDesde)->startOfDay()
+            : Carbon::now()->subWeek()->startOfDay();
+
+        $hasta = $fechaHasta
+            ? Carbon::parse($fechaHasta)->endOfDay()
+            : Carbon::now()->endOfDay();
+
+        $entregas = EntregaReciclaje::with('material')
+            ->where('id_punto_verde', $idPuntoVerde)
+            ->whereBetween('fecha', [$desde, $hasta])
+            ->get()
+            ->map(function ($entrega) {
+                $fecha = $entrega->fecha instanceof Carbon
+                    ? $entrega->fecha
+                    : Carbon::parse($entrega->fecha);
+
+                return (object) [
+                    'fecha' => $fecha,
+                    'material' => optional($entrega->material)->nombre ?? 'sin material',
+                    'movimiento' => 'Entrada',
+                    'cantidad_valor' => $entrega->cantidad_kg,
+                    'cantidad_unidad' => 'kg',
+                    'observaciones' => $entrega->observaciones,
+                ];
+            });
+
+        $vaciados = SolicitudVaciado::with(['contenedor.material'])
+            ->where('id_punto_verde', $idPuntoVerde)
+            ->where('estado', 'Atendida')
+            ->whereBetween('fecha_atencion', [$desde, $hasta])
+            ->get()
+            ->map(function ($solicitud) {
+                $fecha = $solicitud->fecha_atencion
+                    ? Carbon::parse($solicitud->fecha_atencion)
+                    : ($solicitud->fecha_solicitud
+                        ? Carbon::parse($solicitud->fecha_solicitud)
+                        : Carbon::now());
+
+                $materialNombre = optional(optional($solicitud->contenedor)->material)->nombre ?? 'sin material';
+                $volumen = $solicitud->volumen_m3
+                    ?? optional($solicitud->contenedor)->nivel_actual_m3
+                    ?? optional($solicitud->contenedor)->capacidad_maxima_m3
+                    ?? 0;
+
+                return (object) [
+                    'fecha' => $fecha,
+                    'material' => $materialNombre,
+                    'movimiento' => 'Salida',
+                    'cantidad_valor' => $volumen,
+                    'cantidad_unidad' => 'm3',
+                    'observaciones' => 'vaciado de contenedor',
+                ];
+            });
+
+        return $entregas
+            ->merge($vaciados)
+            ->sortByDesc('fecha')
+            ->take($limit)
+            ->values();
     }
 }
