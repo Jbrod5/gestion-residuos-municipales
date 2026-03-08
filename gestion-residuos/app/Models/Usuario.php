@@ -21,6 +21,12 @@ class Usuario extends Authenticatable
         return $this->belongsTo(Rol::class, 'id_rol', 'id_rol');
     }
 
+    // punto verde asignado (solo para operadores con rol 3)
+    public function puntoVerde()
+    {
+        return $this->belongsTo(PuntoVerde::class, 'id_punto_verde', 'id_punto_verde');
+    }
+
     public function cuadrillas()
     {
         return $this->belongsToMany(Cuadrilla::class, 'cuadrilla_trabajador', 'id_usuario', 'id_cuadrilla')

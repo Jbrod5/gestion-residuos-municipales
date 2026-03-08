@@ -63,6 +63,7 @@ class AuthService
             'telefono' => $data['telefono'] ?? null,
             'password' => Hash::make($data['password']),
             'activo' => 1,
+            'id_punto_verde' => $data['id_punto_verde'] ?? null,
         ]);
     }
 

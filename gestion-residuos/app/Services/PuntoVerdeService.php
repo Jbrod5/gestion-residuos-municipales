@@ -50,7 +50,7 @@ class PuntoVerdeService
     public function crearPuntoVerde(array $data)
     {
         return DB::transaction(function () use ($data) {
-            // 1. crear el punto verde municipal
+            // 1. crear el punto verde
             $punto = PuntoVerde::create([
                 'id_encargado' => $data['id_encargado'],
                 'nombre' => $data['nombre'],
@@ -58,10 +58,15 @@ class PuntoVerdeService
                 'capacidad_total_m3' => $data['capacidad_total_m3'],
                 'latitud' => $data['latitud'],
                 'longitud' => $data['longitud'],
-                'horario' => null, // ya no usamos texto simple success total
+                'horario' => null,
             ]);
 
-            // 2. persistir horarios normalizados por día
+            // 2. asignar el punto verde al usuario encargado en la tabla usuarios
+            // esto es lo que permite al operador ver su punto verde en el dashboard
+            Usuario::where('id_usuario', $data['id_encargado'])
+                ->update(['id_punto_verde' => $punto->id_punto_verde]);
+
+            // 3. persistir horarios normalizados por día
             if (isset($data['dias']) && is_array($data['dias'])) {
                 foreach ($data['dias'] as $id_dia => $activo) {
                     if ($activo && !empty($data['hora_inicio'][$id_dia]) && !empty($data['hora_fin'][$id_dia])) {
@@ -75,7 +80,7 @@ class PuntoVerdeService
                 }
             }
 
-            // 3. crear contenedores para los materiales seleccionados
+            // 4. crear contenedores para los materiales seleccionados
             if (isset($data['contenedores']) && is_array($data['contenedores'])) {
                 foreach ($data['contenedores'] as $id_material => $capacidad) {
                     if ($capacidad > 0) {
@@ -100,8 +105,9 @@ class PuntoVerdeService
     {
         return DB::transaction(function () use ($id, $data) {
             $punto = PuntoVerde::findOrFail($id);
+            $encargadoAnterior = $punto->id_encargado;
 
-            // 1. actualizar datos básicos
+            // 1. actualizar datos básicos del punto verde
             $punto->update([
                 'id_encargado' => $data['id_encargado'],
                 'nombre' => $data['nombre'],
@@ -111,7 +117,16 @@ class PuntoVerdeService
                 'longitud' => $data['longitud'],
             ]);
 
-            // 2. sincronizar horarios (borrar y re-crear es más limpio para esto)
+            // 2. sincronizar id_punto_verde en la tabla usuarios
+            // si cambió el encargado, limpiar el anterior y asignar el nuevo
+            if ($encargadoAnterior != $data['id_encargado']) {
+                Usuario::where('id_usuario', $encargadoAnterior)
+                    ->update(['id_punto_verde' => null]);
+            }
+            Usuario::where('id_usuario', $data['id_encargado'])
+                ->update(['id_punto_verde' => $punto->id_punto_verde]);
+
+            // 3. sincronizar horarios (borrar y re-crear)
             $punto->horarios()->delete();
             if (isset($data['dias']) && is_array($data['dias'])) {
                 foreach ($data['dias'] as $id_dia => $activo) {
@@ -126,7 +141,7 @@ class PuntoVerdeService
                 }
             }
 
-            // 3. sincronizar contenedores (actualizar capacidades)
+            // 4. sincronizar contenedores
             if (isset($data['contenedores']) && is_array($data['contenedores'])) {
                 foreach ($data['contenedores'] as $id_material => $capacidad) {
                     if ($capacidad > 0) {
@@ -134,9 +149,7 @@ class PuntoVerdeService
                         ['id_punto_verde' => $punto->id_punto_verde, 'id_material' => $id_material],
                         ['capacidad_maxima_m3' => $capacidad]
                         );
-                    }
-                    else {
-                        // si la capacidad es 0, removemos el contenedor si existía municipal
+                    } else {
                         Contenedor::where('id_punto_verde', $punto->id_punto_verde)
                             ->where('id_material', $id_material)
                             ->delete();

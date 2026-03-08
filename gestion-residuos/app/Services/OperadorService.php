@@ -11,9 +11,7 @@ use Carbon\Carbon;
 
 class OperadorService
 {
-    /**
-     * Registra una entrega de material y actualiza el stock municipal
-     */
+    // registra una entrega de material y actualiza el stock del contenedor
     public function registrarEntrega(array $data)
     {
         return DB::transaction(function () use ($data) {
@@ -22,10 +20,10 @@ class OperadorService
                 ->where('id_material', $data['id_material'])
                 ->firstOrFail();
 
-            // Conversión: Volumen (m3) = Peso (kg) / Densidad (kg/m3) municipal
+            // conversion: m3 = kg / densidad (kg/m3)
             $volumen_m3 = $data['cantidad_kg'] / $material->densidad_kg_m3;
 
-            // Registrar entrega municipal
+            // registrar la entrega
             $entrega = EntregaReciclaje::create([
                 'id_punto_verde' => $data['id_punto_verde'],
                 'id_material' => $data['id_material'],
@@ -35,11 +33,11 @@ class OperadorService
                 'observaciones' => $data['observaciones'] ?? null,
             ]);
 
-            // Actualizar stock del contenedor municipal
+            // sumar volumen al contenedor
             $contenedor->nivel_actual_m3 += $volumen_m3;
             $contenedor->save();
 
-            // Verificar alerta de llenado (90%) municipal
+            // crear solicitud de vaciado automatica si llega a >= 90%
             $porcentaje = ($contenedor->nivel_actual_m3 / $contenedor->capacidad_maxima_m3) * 100;
             if ($porcentaje >= 90) {
                 SolicitudVaciado::firstOrCreate([
@@ -53,25 +51,37 @@ class OperadorService
         });
     }
 
-    /**
-     * Obtiene el estado del inventario para un punto verde municipal
-     */
+    // obtiene el inventario con niveles de alerta diferenciados (75%, 90%, 100%)
     public function getEstadoInventario($idPuntoVerde)
     {
         return Contenedor::with('material')
             ->where('id_punto_verde', $idPuntoVerde)
             ->get()
             ->map(function ($c) {
-                $porcentaje = ($c->nivel_actual_m3 / $c->capacidad_maxima_m3) * 100;
-                $c->porcentaje_llenado = round(min($porcentaje, 100), 1);
+                $porcentaje = $c->capacidad_maxima_m3 > 0
+                    ? ($c->nivel_actual_m3 / $c->capacidad_maxima_m3) * 100
+                    : 0;
+                $porcentaje = min($porcentaje, 100);
+
+                $c->porcentaje_llenado = round($porcentaje, 1);
+
+                // estado_alerta determina el color y la accion a mostrar
+                if ($porcentaje >= 100) {
+                    $c->estado_alerta = 'lleno';       // contenedor lleno, atencion inmediata
+                } elseif ($porcentaje >= 90) {
+                    $c->estado_alerta = 'critico';    // solicitar vaciado urgente
+                } elseif ($porcentaje >= 75) {
+                    $c->estado_alerta = 'advertencia'; // alerta temprana
+                } else {
+                    $c->estado_alerta = 'normal';      // ok
+                }
+
                 $c->necesita_vaciado = $porcentaje >= 90;
                 return $c;
             });
     }
 
-    /**
-     * Resetea el stock de un contenedor y marca la solicitud como atendida municipal
-     */
+    // resetea un contenedor y marca la solicitud como atendida
     public function atenderVaciado($idContenedor)
     {
         return DB::transaction(function () use ($idContenedor) {
@@ -88,5 +98,15 @@ class OperadorService
 
             return true;
         });
+    }
+
+    // crea una solicitud de vaciado manual desde el boton del operador
+    public function crearSolicitudVaciado($idContenedor, $idPuntoVerde)
+    {
+        return SolicitudVaciado::firstOrCreate([
+            'id_punto_verde' => $idPuntoVerde,
+            'id_contenedor' => $idContenedor,
+            'estado' => 'Pendiente',
+        ]);
     }
 }

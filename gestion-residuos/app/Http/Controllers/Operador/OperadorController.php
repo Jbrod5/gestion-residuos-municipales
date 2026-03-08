@@ -17,12 +17,11 @@ class OperadorController extends Controller
         $this->operadorService = $operadorService;
     }
 
-    /**
-     * Dashboard del Operador municipal
-     */
+    // dashboard principal del operador
     public function dashboard()
     {
-        $usuario = auth()->user();
+        // fresh() recarga el usuario desde la BD, evitando problemas de cache municipal
+        $usuario = auth()->user()->fresh();
         $idPuntoVerde = $usuario->id_punto_verde;
 
         if (!$idPuntoVerde) {
@@ -37,13 +36,12 @@ class OperadorController extends Controller
         return view('operador.dashboard', compact('puntoVerde', 'inventario'));
     }
 
-    /**
-     * Formulario de nueva entrega municipal
-     */
+    // formulario de nueva entrega municipal
     public function createEntrega()
     {
-        if (!auth()->user()->id_punto_verde) {
-            return redirect()->route('operador.dashboard')->with('error', 'No puede registrar entregas sin un Punto Verde asignado municipal.');
+        // fresh() garantiza que tengamos el id_punto_verde actualizado
+        if (!auth()->user()->fresh()->id_punto_verde) {
+            return redirect()->route('operador.dashboard')->with('error', 'No puede registrar entregas sin un Punto Verde asignado.');
         }
 
         $materiales = Material::all();
@@ -70,12 +68,10 @@ class OperadorController extends Controller
         return redirect()->route('operador.dashboard')->with('success', 'Entrega registrada con éxito municipal.');
     }
 
-    /**
-     * Solicita vaciado manual municipal
-     */
+    // solicita vaciado de un contenedor específico municipal
     public function solicitarVaciado($id_contenedor)
     {
-        // La lógica automática ya crea la solicitud, esto es un refuerzo municipal
-        return redirect()->back()->with('info', 'La solicitud de vaciado ha sido notificada al coordinador municipal.');
+        $this->operadorService->crearSolicitudVaciado($id_contenedor, auth()->user()->fresh()->id_punto_verde);
+        return redirect()->back()->with('success', 'Solicitud de vaciado enviada al coordinador.');
     }
 }

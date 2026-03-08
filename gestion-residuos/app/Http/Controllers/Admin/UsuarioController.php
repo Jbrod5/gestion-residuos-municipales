@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Services\AuthService;
 use App\Models\Rol;
+use App\Models\PuntoVerde;
 use Illuminate\Http\Request;
 
 class UsuarioController extends Controller
@@ -27,7 +28,8 @@ class UsuarioController extends Controller
     public function create()
     {
         $roles = Rol::all();
-        return view('admin.usuarios.create', compact('roles'));
+        $puntosVerdes = PuntoVerde::orderBy('nombre')->get();
+        return view('admin.usuarios.create', compact('roles', 'puntosVerdes'));
     }
 
     // procesa la creacion del nuevo usuario administrativo o ciudadano
@@ -39,6 +41,7 @@ class UsuarioController extends Controller
             'correo' => 'required|email|unique:usuarios,correo',
             'telefono' => 'nullable|string|max:20',
             'password' => 'required|string|min:8|confirmed',
+            'id_punto_verde' => 'nullable|exists:puntos_verde,id_punto_verde',
         ]);
 
         $this->authService->crearUsuarioAdministrativo($request->all());
