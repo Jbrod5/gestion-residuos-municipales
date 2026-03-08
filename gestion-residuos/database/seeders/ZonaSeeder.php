@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 class ZonaSeeder extends Seeder
 {
     /**
-     * Seed the application's database with simple zones guatemaltecas 2026.
+     * Seed para zonas
      */
     public function run(): void
     {
@@ -20,7 +20,7 @@ class ZonaSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-        // insertamos las 5 zonas solicitadas sin coordenadas basura amén
+
         $zonas = [
             ['id_tipo_zona' => $id_tipo, 'nombre' => 'Zona 1', 'created_at' => now(), 'updated_at' => now()],
             ['id_tipo_zona' => $id_tipo, 'nombre' => 'Zona 2', 'created_at' => now(), 'updated_at' => now()],

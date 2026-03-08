@@ -31,7 +31,8 @@ class PuntoVerdeController extends Controller
     {
         $materiales = $this->puntoVerdeService->listarMateriales();
         $operadores = $this->puntoVerdeService->obtenerOperadoresDisponibles();
-        return view('admin.puntos_verdes.create', compact('materiales', 'operadores'));
+        $diasSemana = $this->puntoVerdeService->obtenerDiasSemana();
+        return view('admin.puntos_verdes.create', compact('materiales', 'operadores', 'diasSemana'));
     }
 
     /**
@@ -42,11 +43,13 @@ class PuntoVerdeController extends Controller
         $request->validate([
             'nombre' => 'required|string|max:255',
             'direccion' => 'required|string|max:500',
-            'horario' => 'nullable|string|max:100',
             'capacidad_total_m3' => 'required|numeric|min:1',
             'id_encargado' => 'required|exists:usuarios,id_usuario',
             'latitud' => 'required|numeric',
             'longitud' => 'required|numeric',
+            'dias' => 'nullable|array',
+            'hora_inicio' => 'nullable|array',
+            'hora_fin' => 'nullable|array',
             'contenedores' => 'nullable|array',
             'contenedores.*' => 'nullable|numeric|min:0',
         ]);
@@ -55,8 +58,9 @@ class PuntoVerdeController extends Controller
             $this->puntoVerdeService->crearPuntoVerde($request->all());
 
             return redirect()->route('admin.puntos-verdes.index')
-                ->with('success', 'punto verde y contenedores municipales creados con éxito absoluto');
-        } catch (\Exception $e) {
+                ->with('success', 'punto verde y contenedores municipales creados correctamente');
+        }
+        catch (\Exception $e) {
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'error al crear infraestructura: ' . $e->getMessage());

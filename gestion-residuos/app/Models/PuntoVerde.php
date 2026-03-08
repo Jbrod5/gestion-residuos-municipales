@@ -22,4 +22,9 @@ class PuntoVerde extends Model
     {
         return $this->hasMany(Contenedor::class, 'id_punto_verde', 'id_punto_verde');
     }
+
+    public function horarios()
+    {
+        return $this->hasMany(PuntoVerdeHorario::class, 'id_punto_verde', 'id_punto_verde');
+    }
 }

@@ -6,6 +6,8 @@ use App\Models\PuntoVerde;
 use App\Models\Contenedor;
 use App\Models\Material;
 use App\Models\Usuario;
+use App\Models\PuntoVerdeHorario;
+use App\Models\DiaSemana;
 use Illuminate\Support\Facades\DB;
 
 class PuntoVerdeService
@@ -15,7 +17,7 @@ class PuntoVerdeService
      */
     public function listarPuntos()
     {
-        return PuntoVerde::with('encargado')->get();
+        return PuntoVerde::with(['encargado', 'horarios.diaSemana'])->get();
     }
 
     /**
@@ -24,6 +26,14 @@ class PuntoVerdeService
     public function listarMateriales()
     {
         return Material::all();
+    }
+
+    /**
+     * retorna los días de la semana para el formulario successo total
+     */
+    public function obtenerDiasSemana()
+    {
+        return DiaSemana::all();
     }
 
     /**
@@ -45,13 +55,27 @@ class PuntoVerdeService
                 'id_encargado' => $data['id_encargado'],
                 'nombre' => $data['nombre'],
                 'direccion' => $data['direccion'],
-                'horario' => $data['horario'],
                 'capacidad_total_m3' => $data['capacidad_total_m3'],
                 'latitud' => $data['latitud'],
                 'longitud' => $data['longitud'],
+                'horario' => null, // ya no usamos texto simple success total
             ]);
 
-            // 2. crear contenedores para los materiales seleccionados
+            // 2. persistir horarios normalizados por día
+            if (isset($data['dias']) && is_array($data['dias'])) {
+                foreach ($data['dias'] as $id_dia => $activo) {
+                    if ($activo && !empty($data['hora_inicio'][$id_dia]) && !empty($data['hora_fin'][$id_dia])) {
+                        PuntoVerdeHorario::create([
+                            'id_punto_verde' => $punto->id_punto_verde,
+                            'id_dia_semana' => $id_dia,
+                            'hora_inicio' => $data['hora_inicio'][$id_dia],
+                            'hora_fin' => $data['hora_fin'][$id_dia],
+                        ]);
+                    }
+                }
+            }
+
+            // 3. crear contenedores para los materiales seleccionados
             if (isset($data['contenedores']) && is_array($data['contenedores'])) {
                 foreach ($data['contenedores'] as $id_material => $capacidad) {
                     if ($capacidad > 0) {

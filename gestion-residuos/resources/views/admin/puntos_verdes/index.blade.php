@@ -38,7 +38,17 @@
                                 <td>
                                     <span class="badge bg-info text-dark">{{ $punto->encargado->nombre }}</span>
                                 </td>
-                                <td>{{ $punto->horario ?? 'N/A' }}</td>
+                                <td>
+                                    @if($punto->horarios->count() > 0)
+                                        <ul class="list-unstyled mb-0 small">
+                                            @foreach($punto->horarios as $horario)
+                                                <li><strong>{{ $horario->diaSemana->nombre }}:</strong> {{ \Carbon\Carbon::parse($horario->hora_inicio)->format('H:i') }} - {{ \Carbon\Carbon::parse($horario->hora_fin)->format('H:i') }}</li>
+                                            @endforeach
+                                        </ul>
+                                    @else
+                                        <span class="text-muted italic">Sin horario asignado</span>
+                                    @endif
+                                </td>
                                 <td>
                                     <button class="btn btn-sm btn-outline-primary" title="Ver en mapa disabled">
                                         <i class="bi bi-geo-alt"></i>

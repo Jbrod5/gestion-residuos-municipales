@@ -53,7 +53,7 @@ class AuthService
         ]);
     }
 
-    // registra un usuario administrativo permitiendo elegir el rol municipal guatemalteco
+    // registra un usuario administrativo permitiendo elegir el rol municipal
     public function crearUsuarioAdministrativo(array $data): Usuario
     {
         return Usuario::create([
