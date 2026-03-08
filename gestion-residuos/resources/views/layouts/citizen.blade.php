@@ -66,8 +66,8 @@
                            href="{{ route('ciudadano.mapa') }}">Mapa de Recolección</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('ciudadano.puntos-verdes') ? 'active text-primary fw-bold' : '' }}" 
-                           href="{{ route('ciudadano.puntos-verdes') }}">Puntos Verdes</a>
+                        <a class="nav-link {{ request()->routeIs('puntos-verdes') ? 'active text-primary fw-bold' : '' }}" 
+                           href="{{ route('puntos-verdes') }}">Puntos Verdes</a>
                     </li>
                 </ul>
 

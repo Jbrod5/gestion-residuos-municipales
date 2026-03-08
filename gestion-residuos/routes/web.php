@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\PuntoVerdePublicController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -16,6 +17,9 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 // Rutas de Registro
 Route::get('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'register']);
+
+// Ruta publica para mapa de puntos verdes
+Route::get('/puntos-verdes', [PuntoVerdePublicController::class, 'index'])->name('puntos-verdes');
 
 // Rutas para el Ciudadano (Módulo de Denuncias)
 Route::group(['prefix' => 'ciudadano', 'as' => 'ciudadano.', 'middleware' => 'auth'], function () {
