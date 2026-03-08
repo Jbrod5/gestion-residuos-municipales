@@ -78,4 +78,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], fu
     Route::get('/puntos-verdes', [\App\Http\Controllers\Admin\PuntoVerdeController::class, 'index'])->name('puntos-verdes.index');
     Route::get('/puntos-verdes/nuevo', [\App\Http\Controllers\Admin\PuntoVerdeController::class, 'create'])->name('puntos-verdes.create');
     Route::post('/puntos-verdes', [\App\Http\Controllers\Admin\PuntoVerdeController::class, 'store'])->name('puntos-verdes.store');
+    Route::get('/puntos-verdes/{id}/editar', [\App\Http\Controllers\Admin\PuntoVerdeController::class, 'edit'])->name('puntos-verdes.edit');
+    Route::patch('/puntos-verdes/{id}', [\App\Http\Controllers\Admin\PuntoVerdeController::class, 'update'])->name('puntos-verdes.update');
+    Route::delete('/puntos-verdes/{id}', [\App\Http\Controllers\Admin\PuntoVerdeController::class, 'destroy'])->name('puntos-verdes.destroy');
 });

@@ -66,4 +66,71 @@ class PuntoVerdeController extends Controller
                 ->with('error', 'error al crear infraestructura: ' . $e->getMessage());
         }
     }
+
+    /**
+     * formulario de edición con mapa Leaflet sincronizado
+     */
+    public function edit($id)
+    {
+        $punto = $this->puntoVerdeService->obtenerPorId($id);
+        $materiales = $this->puntoVerdeService->listarMateriales();
+        $operadores = $this->puntoVerdeService->obtenerOperadoresDisponibles();
+        $diasSemana = $this->puntoVerdeService->obtenerDiasSemana();
+        
+        // mapear horarios para fácil acceso en la vista municipal success total
+        $horariosActivos = $punto->horarios->keyBy('id_dia_semana');
+        $contenedoresActivos = $punto->contenedores->keyBy('id_material');
+
+        return view('admin.puntos_verdes.edit', compact(
+            'punto', 'materiales', 'operadores', 'diasSemana', 'horariosActivos', 'contenedoresActivos'
+        ));
+    }
+
+    /**
+     * actualiza la infraestructura de forma atómica successo total
+     */
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'direccion' => 'required|string|max:500',
+            'capacidad_total_m3' => 'required|numeric|min:1',
+            'id_encargado' => 'required|exists:usuarios,id_usuario',
+            'latitud' => 'required|numeric',
+            'longitud' => 'required|numeric',
+            'dias' => 'nullable|array',
+            'hora_inicio' => 'nullable|array',
+            'hora_fin' => 'nullable|array',
+            'contenedores' => 'nullable|array',
+            'contenedores.*' => 'nullable|numeric|min:0',
+        ]);
+
+        try {
+            $this->puntoVerdeService->actualizarPuntoVerde($id, $request->all());
+
+            return redirect()->route('admin.puntos-verdes.index')
+                ->with('success', 'infraestructura municipal actualizada correctamente');
+        }
+        catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'error al actualizar: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * borrado físico en cascada de la infraestructura successo total
+     */
+    public function destroy($id)
+    {
+        try {
+            $this->puntoVerdeService->eliminarPuntoVerde($id);
+            return redirect()->route('admin.puntos-verdes.index')
+                ->with('success', 'infraestructura eliminada correctamente successo total');
+        }
+        catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'error al eliminar: ' . $e->getMessage());
+        }
+    }
 }
