@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 // Rutas de Autenticación
@@ -29,6 +29,10 @@ Route::group(['prefix' => 'ciudadano', 'as' => 'ciudadano.', 'middleware' => 'au
     Route::get('/denuncias/nueva', [\App\Http\Controllers\Ciudadano\DenunciaController::class, 'create'])->name('denuncias.create');
     Route::get('/denuncias/{id_denuncia}', [\App\Http\Controllers\Ciudadano\DenunciaController::class, 'show'])->name('denuncias.show');
     Route::post('/denuncias', [\App\Http\Controllers\Ciudadano\DenunciaController::class, 'store'])->name('denuncias.store');
+
+    // Mapa y Puntos Verdes (Vistas simplificadas por ahora municipal)
+    Route::get('/mapa', function () { return view('ciudadano.hub'); })->name('mapa');
+    Route::get('/puntos-verdes', function () { return view('ciudadano.hub'); })->name('puntos-verdes');
 });
 
 // Rutas para el Administrador Municipal
