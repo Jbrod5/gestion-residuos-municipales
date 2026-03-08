@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             TamanoDenunciaSeeder::class,
             UsuarioSeeder::class,
             ZonaSeeder::class,
+            MaterialSeeder::class,
         ]);
     }
 }

@@ -69,4 +69,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], fu
     // Asignación de Denuncias a Cuadrillas
     Route::post('/asignaciones', [\App\Http\Controllers\Admin\AsignacionController::class, 'store'])->name('asignaciones.store');
     Route::post('/denuncias/{id}/finalizar', [\App\Http\Controllers\Admin\AdminDenunciaController::class, 'finalizar'])->name('denuncias.finalizar');
+
+    // Gestión de Puntos Verdes (Mapeo de Infraestructura municipal)
+    Route::get('/puntos-verdes', [\App\Http\Controllers\Admin\PuntoVerdeController::class, 'index'])->name('puntos-verdes.index');
+    Route::get('/puntos-verdes/nuevo', [\App\Http\Controllers\Admin\PuntoVerdeController::class, 'create'])->name('puntos-verdes.create');
+    Route::post('/puntos-verdes', [\App\Http\Controllers\Admin\PuntoVerdeController::class, 'store'])->name('puntos-verdes.store');
 });
