@@ -34,9 +34,9 @@ Route::group(['prefix' => 'ciudadano', 'as' => 'ciudadano.', 'middleware' => 'au
     Route::get('/denuncias/{id_denuncia}', [\App\Http\Controllers\Ciudadano\DenunciaController::class, 'show'])->name('denuncias.show');
     Route::post('/denuncias', [\App\Http\Controllers\Ciudadano\DenunciaController::class, 'store'])->name('denuncias.store');
 
-    // Mapa y Puntos Verdes (Vistas simplificadas por ahora municipal)
-    Route::get('/mapa', function () { return view('ciudadano.hub'); })->name('mapa');
-    Route::get('/puntos-verdes', function () { return view('ciudadano.hub'); })->name('puntos-verdes');
+    // Mapa de rutas de recoleccion para el ciudadano
+    Route::get('/mapa-recoleccion', [\App\Http\Controllers\Ciudadano\RutaPublicaController::class, 'index'])->name('mapa');
+    Route::get('/api/rutas', [\App\Http\Controllers\Ciudadano\RutaPublicaController::class, 'apiRutas'])->name('api.rutas');
 });
 
 // Rutas para el Administrador Municipal
@@ -85,6 +85,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], fu
     Route::get('/puntos-verdes/{id}/editar', [\App\Http\Controllers\Admin\PuntoVerdeController::class, 'edit'])->name('puntos-verdes.edit');
     Route::patch('/puntos-verdes/{id}', [\App\Http\Controllers\Admin\PuntoVerdeController::class, 'update'])->name('puntos-verdes.update');
     Route::delete('/puntos-verdes/{id}', [\App\Http\Controllers\Admin\PuntoVerdeController::class, 'destroy'])->name('puntos-verdes.destroy');
+
+    // Dashboard de reportes con chartjs
+    Route::get('/reportes', [\App\Http\Controllers\ReporteController::class, 'index'])->name('reportes.index');
+    Route::get('/api/reportes', [\App\Http\Controllers\ReporteController::class, 'apiDatos'])->name('reportes.api');
 });
 
 // Rutas para el Coordinador de Rutas (Módulo 1)

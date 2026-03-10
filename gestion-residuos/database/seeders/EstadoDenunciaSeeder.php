@@ -10,10 +10,13 @@ class EstadoDenunciaSeeder extends Seeder
     public function run(): void
     {
         $estados = [
-            ['id_estado_denuncia' => 1, 'nombre' => 'Pendiente', 'descripcion' => 'Denuncia recibida y esperando revisión'],
-            ['id_estado_denuncia' => 2, 'nombre' => 'En Revisión', 'descripcion' => 'Un coordinador está evaluando la denuncia'],
-            ['id_estado_denuncia' => 3, 'nombre' => 'Atendida', 'descripcion' => 'La limpieza del basurero ha sido completada'],
-            ['id_estado_denuncia' => 4, 'nombre' => 'En Proceso', 'descripcion' => 'Una cuadrilla ha sido asignada y está en camino'],
+            // estados de ciclo completo de la denuncia
+            ['id_estado_denuncia' => 1, 'nombre' => 'Recibida', 'descripcion' => 'Denuncia ingresada y pendiente de revisión'],
+            ['id_estado_denuncia' => 2, 'nombre' => 'En Revisión', 'descripcion' => 'Coordinador evaluando la situación reportada'],
+            ['id_estado_denuncia' => 3, 'nombre' => 'Asignada', 'descripcion' => 'Cuadrilla seleccionada para atender la denuncia'],
+            ['id_estado_denuncia' => 4, 'nombre' => 'En Atención', 'descripcion' => 'Trabajo de limpieza en proceso'],
+            ['id_estado_denuncia' => 5, 'nombre' => 'Atendida', 'descripcion' => 'Limpieza completada y documentada'],
+            ['id_estado_denuncia' => 6, 'nombre' => 'Cerrada', 'descripcion' => 'Caso finalizado y verificado'],
         ];
 
         foreach ($estados as $estado) {

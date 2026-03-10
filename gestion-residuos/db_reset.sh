@@ -1,10 +1,11 @@
 #!/bin/bash
 
-# Rehace la base de datos limpiando y creando todas las tablas desde cerooo
-php artisan migrate:fresh
+# Limpiar caché de Laravel para evitar conflictos de rutas o modelos viejos
+php artisan config:clear
+php artisan cache:clear
 
-# Siembra la base de datos con información por defecto (cuando esté hecho xd)
-# php artisan db:seed
+# Rehace la base de datos limpiando y creando todas las tablas desde cerooo ademas de agregar los datos por defecto :3
+php artisan migrate:fresh --seed
 
 # Mensaje de exito
 echo "Base de datos creada exitosamente :D!!"

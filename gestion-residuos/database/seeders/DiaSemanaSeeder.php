@@ -3,13 +3,10 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\DiaSemana;
+use Illuminate\Support\Facades\DB;
 
 class DiaSemanaSeeder extends Seeder
 {
-    /**
-     * inicializa los nombres de los días de la semana municipal
-     */
     public function run(): void
     {
         $dias = [
@@ -23,7 +20,14 @@ class DiaSemanaSeeder extends Seeder
         ];
 
         foreach ($dias as $dia) {
-            DiaSemana::updateOrCreate(['id_dia_semana' => $dia['id_dia_semana']], $dia);
+            DB::table('dias_semana')->updateOrInsert(
+                ['id_dia_semana' => $dia['id_dia_semana']],
+                [
+                    'nombre' => $dia['nombre'],
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]
+            );
         }
     }
 }

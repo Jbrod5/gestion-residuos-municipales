@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.citizen') 
 
 @section('content')
 <div class="row mb-3">

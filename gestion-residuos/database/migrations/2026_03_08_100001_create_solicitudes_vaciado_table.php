@@ -10,18 +10,22 @@ return new class extends Migration
      * Crea la tabla de solicitudes de vaciado municipal
      */
     public function up(): void
-    {
-        Schema::create('solicitudes_vaciado', function (Blueprint $table) {
-            $table->id('id_solicitud');
-            $table->foreignId('id_punto_verde')->constrained('puntos_verde', 'id_punto_verde')->cascadeOnDelete();
-            $table->foreignId('id_contenedor')->constrained('contenedores', 'id_contenedor')->cascadeOnDelete();
-            $table->enum('estado', ['Pendiente', 'Atendida', 'Cancelada'])->default('Pendiente');
-            $table->dateTime('fecha_solicitud')->useCurrent();
-            $table->dateTime('fecha_atencion')->nullable();
-            $table->timestamps();
-        });
-    }
+{
+    Schema::create('solicitudes_vaciado', function (Blueprint $table) {
+        $table->id('id_solicitud');
+        $table->foreignId('id_punto_verde')->constrained('puntos_verde', 'id_punto_verde')->cascadeOnDelete();
+        $table->foreignId('id_contenedor')->constrained('contenedores', 'id_contenedor')->cascadeOnDelete();
+        
 
+        $table->foreignId('id_usuario')->constrained('usuarios', 'id_usuario')->cascadeOnDelete();
+        
+        $table->enum('estado', ['Pendiente', 'Atendida', 'Cancelada'])->default('Pendiente');
+        $table->decimal('volumen_m3', 8, 2)->default(0);
+        $table->dateTime('fecha_solicitud')->useCurrent();
+        $table->dateTime('fecha_atencion')->nullable();
+        $table->timestamps();
+    });
+}
     /**
      * Revierte la migración municipal
      */

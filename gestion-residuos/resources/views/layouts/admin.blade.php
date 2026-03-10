@@ -77,11 +77,20 @@
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('admin.cuadrillas.*') ? 'active fw-bold text-white' : '' }}"
                             href="{{ route('admin.cuadrillas.index') }}">Cuadrillas</a>
-                    </li>
-                    <li class="nav-item">
+                            <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('admin.puntos-verdes.*') ? 'active fw-bold text-white' : '' }}"
                             href="{{ route('admin.puntos-verdes.index') }}">Puntos Verdes</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('admin.reportes.*') ? 'active fw-bold text-white' : '' }}"
+                            href="{{ route('admin.reportes.index') }}">
+                            <i class="bi bi-bar-chart-line-fill me-1"></i> Reportes
+                        </a>
+                    </li>
+
+
+
+                    
                 </ul>
 
                 <div class="d-flex align-items-center">

@@ -4,8 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Rol;
 use App\Models\Usuario;
+use Illuminate\Support\Facades\DB;
 
 class UsuarioSeeder extends Seeder
 {
@@ -14,19 +14,55 @@ class UsuarioSeeder extends Seeder
      */
     public function run(): void
     {
-        // Ejecutamos primero el seeder de roles para evitar llaves foraneas faltantes
-        $this->call(RolSeeder::class);
-
-        // Crear el usuario con correo exacto del sistema
-        Usuario::updateOrCreate(
-            ['correo' => 'admin@sistema.com'],
+        // Definimos los usuarios para cada rol del sistema
+        $usuarios = [
             [
-                'id_rol' => 1, // 1 es Administrador Municipal según RolSeeder
-                'nombre' => 'Super Admin',
-                'password' => Hash::make('password123'),
-                'telefono' => '1234567890',
+                'id_rol' => 1, // Administrador Municipal
+                'nombre' => 'Admin Municipal Xela',
+                'correo' => 'admin@muni.com',
+                'password' => Hash::make('pass123'),
+                'telefono' => '77610001',
                 'activo' => 1,
-            ]
-        );
+            ],
+            [
+                'id_rol' => 2, // Coordinador de Rutas
+                'nombre' => 'Ing. Carlos Rodriguez',
+                'correo' => 'coordinador@muni.com',
+                'password' => Hash::make('pass123'),
+                'telefono' => '77610002',
+                'activo' => 1,
+            ],
+            [
+                'id_rol' => 3, // Operador de Punto Verde
+                'nombre' => 'Juan Perez Operador',
+                'correo' => 'operador@muni.com',
+                'password' => Hash::make('pass123'),
+                'telefono' => '77610003',
+                'activo' => 1,
+            ],
+            [
+                'id_rol' => 4, // Ciudadano
+                'nombre' => 'Jorge Bravo',
+                'correo' => 'ciudadano@correo.com',
+                'password' => Hash::make('pass123'),
+                'telefono' => '77610004',
+                'activo' => 1,
+            ],
+            [
+                'id_rol' => 5, // Auditor
+                'nombre' => 'Licda. Maria Auditora',
+                'correo' => 'auditor@muni.com',
+                'password' => Hash::make('pass123'),
+                'telefono' => '77610005',
+                'activo' => 1,
+            ],
+        ];
+
+        foreach ($usuarios as $u) {
+            Usuario::updateOrCreate(
+                ['correo' => $u['correo']],
+                $u
+            );
+        }
     }
 }
