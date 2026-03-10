@@ -69,15 +69,16 @@
         </div>
 
         <div class="col-md-4">
-            <div class="card card-coordinator shadow-sm text-center p-4 bg-white opacity-75">
+            <div class="card card-coordinator shadow-sm text-center p-4 bg-white h-100">
                 <div class="mb-3">
-                    <i class="bi bi-truck text-muted" style="font-size: 3rem;"></i>
+                    <i class="bi bi-truck text-warning" style="font-size: 3rem;"></i>
                 </div>
-                <h4 class="fw-bold text-muted">Asignación Camiones</h4>
-                <p class="text-muted">Asigne recolectores a las rutas definidas (Módulo 1 - próximamente) municipal
-                    .</p>
-                <button class="btn btn-secondary w-100 fw-bold" disabled>PRÓXIMAMENTE</button>
+                <h4 class="fw-bold text-dark">Asignación Camiones</h4>
+                <p class="text-muted">Asigne recolectores a las rutas definidas y monitoree el estado de la carga.</p>
+                <a href="{{ route('coordinator.asignaciones.index') }}" class="btn btn-dark w-100 fw-bold">GESTIONAR ASIGNACIONES</a>
             </div>
+        </div>
+    </div>
         </div>
     </div>
 </div>
