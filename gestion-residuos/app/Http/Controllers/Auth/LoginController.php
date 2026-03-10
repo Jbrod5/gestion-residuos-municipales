@@ -45,6 +45,7 @@ class LoginController extends Controller
                     2 => redirect()->route('coordinator.dashboard'),
                     3 => redirect()->route('operador.dashboard'),
                     4 => redirect()->route('ciudadano.hub'),
+                    5 => redirect()->route('auditor.dashboard'),
                     default => redirect('/'),
                 };
         }

@@ -123,3 +123,9 @@ Route::group(['prefix' => 'operador', 'as' => 'operador.', 'middleware' => ['aut
     Route::post('/vaciado/{id_contenedor}', [\App\Http\Controllers\Operador\OperadorController::class, 'solicitarVaciado'])->name('vaciado.solicitar');
     Route::get('/historial', [\App\Http\Controllers\Operador\OperadorController::class, 'historial'])->name('historial.index');
 });
+
+// Rutas para el Auditor (Rol 5)
+Route::group(['prefix' => 'auditor', 'as' => 'auditor.', 'middleware' => ['auth', 'role:5']], function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Auditor\AuditorController::class, 'index'])->name('dashboard');
+    Route::get('/detalle/{tipo}/{id}', [\App\Http\Controllers\Auditor\AuditorController::class, 'show'])->name('show');
+});
