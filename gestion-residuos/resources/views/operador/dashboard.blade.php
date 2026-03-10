@@ -108,8 +108,8 @@
                 </div>
                 @endif
 
-                {{-- boton de solicitar vaciado si >= 90% --}}
-                @if($item->necesita_vaciado)
+                {{-- boton de solicitar vaciado ya está en alerta amarilla --}}
+                @if($item->porcentaje_llenado >= 75)
                 <form action="{{ route('operador.vaciado.solicitar', $item->id_contenedor) }}" method="POST">
                     @csrf
                     <button type="submit" class="btn btn-danger btn-sm w-100">
