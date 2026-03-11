@@ -42,7 +42,7 @@ class UsuarioSeeder extends Seeder
             ],
             [
                 'id_rol' => 4, // Ciudadano
-                'nombre' => 'Jorge Bravo',
+                'nombre' => 'Daniel Orozco',
                 'correo' => 'ciudadano@correo.com',
                 'password' => Hash::make('pass123'),
                 'telefono' => '77610004',
@@ -52,6 +52,14 @@ class UsuarioSeeder extends Seeder
                 'id_rol' => 5, // Auditor
                 'nombre' => 'Licda. Maria Auditora',
                 'correo' => 'auditor@muni.com',
+                'password' => Hash::make('pass123'),
+                'telefono' => '77610005',
+                'activo' => 1,
+            ],
+            [
+                'id_rol' => 6, // Conductor
+                'nombre' => 'Juan Francisco Conductor',
+                'correo' => 'conductor@muni.com',
                 'password' => Hash::make('pass123'),
                 'telefono' => '77610005',
                 'activo' => 1,

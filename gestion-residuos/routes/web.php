@@ -129,3 +129,15 @@ Route::group(['prefix' => 'auditor', 'as' => 'auditor.', 'middleware' => ['auth'
     Route::get('/dashboard', [\App\Http\Controllers\Auditor\AuditorController::class, 'index'])->name('dashboard');
     Route::get('/detalle/{tipo}/{id}', [\App\Http\Controllers\Auditor\AuditorController::class, 'show'])->name('show');
 });
+
+
+// Rutas para el Conductor (Rol 6)
+Route::group(['prefix' => 'conductor', 'as' => 'conductor.', 'middleware' => ['auth', 'role:6']], function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Conductor\ConductorController::class, 'dashboard'])->name('dashboard');
+    Route::get('/asignaciones', [\App\Http\Controllers\Conductor\ConductorController::class, 'index'])->name('asignaciones.index');
+    Route::get('/asignaciones/{id_asignacion}', [\App\Http\Controllers\Conductor\ConductorController::class, 'show'])->name('asignaciones.show');
+    Route::get('/asignaciones/{id_asignacion}/iniciar', [\App\Http\Controllers\Conductor\ConductorController::class, 'iniciar'])->name('asignaciones.iniciar');
+    Route::get('/asignaciones/{id_asignacion}/finalizar', [\App\Http\Controllers\Conductor\ConductorController::class, 'editFinalizar'])->name('asignaciones.finalizar.form');
+    Route::post('/asignaciones/{id_asignacion}/finalizar', [\App\Http\Controllers\Conductor\ConductorController::class, 'finalizar'])->name('asignaciones.finalizar');
+    Route::get('/api/ruta-actual', [\App\Http\Controllers\Conductor\ConductorController::class, 'apiRutaActual'])->name('api.ruta-actual');
+});

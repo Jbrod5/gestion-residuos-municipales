@@ -35,6 +35,11 @@ class RolSeeder extends Seeder
                 'id_rol' => 5,
                 'nombre' => 'Auditor',
                 'descripcion' => 'Consulta de reportes y validacion de datos'
+            ],
+            [
+                'id_rol' => 6,
+                'nombre' => 'Conductor',
+                'descripcion' => 'Operador de camiones recolectores, gestiona rutas asignadas'
             ]
         ];
 
