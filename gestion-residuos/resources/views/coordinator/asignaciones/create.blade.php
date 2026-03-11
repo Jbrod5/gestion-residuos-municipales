@@ -8,7 +8,7 @@
         <div class="col-md-10">
             <div class="card border-0 shadow-lg overflow-hidden">
                 <div class="card-header bg-success py-3">
-                    <h5 class="mb-0 text-white fw-bold">📅 Programación de Recolección</h5>
+                    <h5 class="mb-0 text-white fw-bold">Programación de Recolección</h5>
                 </div>
                 <div class="card-body p-4">
                     <form action="{{ route('coordinator.asignaciones.store') }}" method="POST" id="formAsignacion">
@@ -48,7 +48,7 @@
                                 </div>
                             </div>
 
-                            <!-- Selección de Camión y Conductor -->
+                            <!-- Selección de Camión -->
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">3. Camión Disponible</label>
                                 <select name="id_camion" id="id_camion" class="form-select form-select-lg border-2" required disabled>
@@ -58,15 +58,22 @@
                                     <span class="spinner-border spinner-border-sm me-2"></span>Buscando camiones aptos...
                                 </div>
                             </div>
+                            
+                            <!-- Selección de Conductor (AHORA DINÁMICO) -->
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">4. Conductor Asignado</label>
-                                <select name="id_conductor" class="form-select form-select-lg border-2">
+                                <select name="id_conductor" id="id_conductor" class="form-select form-select-lg border-2">
                                     <option value="">-- Seleccionar Conductor (Opcional) --</option>
                                     @foreach($conductores as $conductor)
                                         <option value="{{ $conductor->id_usuario }}">{{ $conductor->nombre }}</option>
                                     @endforeach
                                 </select>
+                                <div id="loading-conductores" class="text-muted small mt-1 d-none">
+                                    <span class="spinner-border spinner-border-sm me-2"></span>Verificando disponibilidad de conductores...
+                                </div>
                             </div>
+
+                            <!-- Cuadrilla -->
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">5. Cuadrilla Municipal</label>
                                 <select name="id_cuadrilla" class="form-select form-select-lg border-2">
@@ -102,8 +109,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const selectRuta = document.getElementById('id_ruta');
     const inputFecha = document.getElementById('fecha');
     const selectCamion = document.getElementById('id_camion');
+    const selectConductor = document.getElementById('id_conductor');
     const warningFecha = document.getElementById('warning-fecha');
     const loadingCamiones = document.getElementById('loading-camiones');
+    const loadingConductores = document.getElementById('loading-conductores');
     const infoHorario = document.getElementById('info-horario');
     const listaHorarios = document.getElementById('horarios-lista');
 
@@ -128,16 +137,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (idRuta && fecha) {
+            // Deshabilitar selects mientras carga
             selectCamion.disabled = true;
+            selectConductor.disabled = true;
             loadingCamiones.classList.remove('d-none');
+            loadingConductores.classList.remove('d-none');
             
             fetch(`{{ route('coordinator.api.disponibilidad') }}?id_ruta=${idRuta}&fecha=${fecha}`)
                 .then(response => response.json())
                 .then(data => {
+                    // Ocultar indicadores de carga
                     loadingCamiones.classList.add('d-none');
+                    loadingConductores.classList.add('d-none');
+                    
+                    // === ACTUALIZAR CAMPOS DE CAMIÓN ===
                     selectCamion.innerHTML = '<option value="">-- Seleccionar Camión --</option>';
                     
-                    if (data.camiones.length > 0) {
+                    if (data.camiones && data.camiones.length > 0) {
                         data.camiones.forEach(camion => {
                             selectCamion.innerHTML += `<option value="${camion.id_camion}">
                                 ${camion.placa} - Capacidad: ${camion.capacidad_toneladas}t
@@ -146,8 +162,25 @@ document.addEventListener('DOMContentLoaded', function() {
                         selectCamion.disabled = false;
                     } else {
                         selectCamion.innerHTML = '<option value="">No hay camiones aptos/disponibles</option>';
+                        // Se queda deshabilitado
                     }
 
+                    // === ACTUALIZAR CAMPOS DE CONDUCTOR (NUEVO) ===
+                    selectConductor.innerHTML = '<option value="">-- Seleccionar Conductor (Opcional) --</option>';
+                    
+                    if (data.conductores && data.conductores.length > 0) {
+                        data.conductores.forEach(conductor => {
+                            selectConductor.innerHTML += `<option value="${conductor.id_usuario}">
+                                ${conductor.nombre}
+                            </option>`;
+                        });
+                        selectConductor.disabled = false;
+                    } else {
+                        selectConductor.innerHTML = '<option value="">No hay conductores disponibles</option>';
+                        selectConductor.disabled = true;
+                    }
+
+                    // === ADVERTENCIA DE FECHA ===
                     if (data.es_programada) {
                         warningFecha.classList.add('d-none');
                     } else {
@@ -157,11 +190,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 .catch(err => {
                     console.error('Error fetching disponibilidad:', err);
                     loadingCamiones.classList.add('d-none');
+                    loadingConductores.classList.add('d-none');
+                    
+                    // Mensajes de error amigables
+                    selectCamion.innerHTML = '<option value="">Error al cargar camiones</option>';
+                    selectConductor.innerHTML = '<option value="">Error al cargar conductores</option>';
                 });
         }
     }
 
+    // Escuchar cambios en ruta o fecha
     [selectRuta, inputFecha].forEach(el => el.addEventListener('change', checkDisponibilidad));
+    
+    // También escuchar cuando se escriba manualmente en fecha (por si acaso)
+    inputFecha.addEventListener('input', checkDisponibilidad);
 });
 </script>
 @endsection

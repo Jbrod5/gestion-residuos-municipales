@@ -6,7 +6,7 @@
 <div class="container-fluid py-4">
     <div class="row mb-4 align-items-center">
         <div class="col-md-6">
-            <h2 class="mb-0 text-success fw-bold">📅 Planificación de Rutas</h2>
+            <h2 class="mb-0 text-success fw-bold">Planificación de Rutas</h2>
             <p class="text-muted mb-0">Asignación de recursos físicos para recolección municipal</p>
         </div>
         <div class="col-md-6 text-end">

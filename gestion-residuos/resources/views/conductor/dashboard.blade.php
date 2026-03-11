@@ -145,17 +145,19 @@
                                             </td>
                                             <td>{{ $asignacion->hora_inicio ?? '—' }}</td>
                                             <td>
-                                                <a href="{{ route('conductor.asignaciones.show', $asignacion->id_asignacion_ruta) }}" 
-                                                   class="btn btn-sm btn-outline-success">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                                @if($asignacion->id_estado_asignacion_ruta == 1)
-                                                    <a href="{{ route('conductor.asignaciones.iniciar', $asignacion->id_asignacion_ruta) }}" 
-                                                       class="btn btn-sm btn-success"
-                                                       onclick="return confirm('¿Iniciar esta ruta ahora?')">
-                                                        <i class="fas fa-play"></i>
+                                                <div class="d-flex gap-2">
+                                                    <a href="{{ route('conductor.asignaciones.show', $asignacion->id_asignacion_ruta) }}" 
+                                                       class="btn btn-sm btn-outline-success">
+                                                        <i class="fas fa-eye me-1"></i>Ver
                                                     </a>
-                                                @endif
+                                                    @if($asignacion->id_estado_asignacion_ruta == 1)
+                                                        <a href="{{ route('conductor.asignaciones.iniciar', $asignacion->id_asignacion_ruta) }}" 
+                                                           class="btn btn-sm btn-success"
+                                                           onclick="return confirm('¿Iniciar esta ruta ahora?')">
+                                                            <i class="fas fa-play me-1"></i>Iniciar
+                                                        </a>
+                                                    @endif
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach

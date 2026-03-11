@@ -49,7 +49,7 @@
                                 <i class="fas fa-filter me-2"></i>Filtrar
                             </button>
                             <a href="{{ route('conductor.asignaciones.index') }}" class="btn btn-outline-secondary">
-                                <i class="fas fa-undo"></i>
+                                <i class="fas fa-undo"></i>Limpiar
                             </a>
                         </div>
                     </form>
@@ -119,26 +119,28 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="{{ route('conductor.asignaciones.show', $asignacion->id_asignacion_ruta) }}" 
-                                           class="btn btn-sm btn-outline-success" 
-                                           title="Ver detalles">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        
-                                        @if($asignacion->id_estado_asignacion_ruta == 1)
-                                            <a href="{{ route('conductor.asignaciones.iniciar', $asignacion->id_asignacion_ruta) }}" 
-                                               class="btn btn-sm btn-success"
-                                               onclick="return confirm('¿Iniciar esta ruta?')"
-                                               title="Iniciar ruta">
-                                                <i class="fas fa-play"></i>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            <!-- Botón Ver siempre visible -->
+                                            <a href="{{ route('conductor.asignaciones.show', $asignacion->id_asignacion_ruta) }}" 
+                                               class="btn btn-sm btn-outline-success">
+                                                <i class="fas fa-eye me-1"></i>Ver
                                             </a>
-                                        @elseif($asignacion->id_estado_asignacion_ruta == 2)
-                                            <a href="{{ route('conductor.asignaciones.finalizar.form', $asignacion->id_asignacion_ruta) }}" 
-                                               class="btn btn-sm btn-warning"
-                                               title="Finalizar ruta">
-                                                <i class="fas fa-flag-checkered"></i>
-                                            </a>
-                                        @endif
+                                            
+                                            @if($asignacion->id_estado_asignacion_ruta == 1)
+                                                <!-- Botón Iniciar solo para programadas -->
+                                                <a href="{{ route('conductor.asignaciones.iniciar', $asignacion->id_asignacion_ruta) }}" 
+                                                   class="btn btn-sm btn-success"
+                                                   onclick="return confirm('¿Iniciar esta ruta?')">
+                                                    <i class="fas fa-play me-1"></i>Iniciar
+                                                </a>
+                                            @elseif($asignacion->id_estado_asignacion_ruta == 2)
+                                                <!-- Botón Finalizar solo para en proceso -->
+                                                <a href="{{ route('conductor.asignaciones.finalizar.form', $asignacion->id_asignacion_ruta) }}" 
+                                                   class="btn btn-sm btn-warning">
+                                                    <i class="fas fa-flag-checkered me-1"></i>Finalizar
+                                                </a>
+                                            @endif
+                                        </div>
                                     </td>
                                 </tr>
                                 @empty

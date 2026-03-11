@@ -27,16 +27,16 @@ class AsignacionController extends Controller
         }
 
         $asignaciones = $query->orderBy('fecha', 'desc')->paginate(15);
-        
+
         return view('coordinator.asignaciones.index', compact('asignaciones'));
     }
 
     public function create()
     {
         $rutas = Ruta::with('dias')->get();
-        $conductores = Usuario::where('id_rol', 3)->get(); // Suponiendo Rol 3 = Conductor municipal
+        $conductores = Usuario::where('id_rol', 6)->where('activo', true)->get(); // Rol 6 = Condcuctor
         $cuadrillas = \App\Models\Cuadrilla::all();
-        
+
         return view('coordinator.asignaciones.create', compact('rutas', 'conductores', 'cuadrillas'));
     }
 
@@ -56,20 +56,27 @@ class AsignacionController extends Controller
     }
 
     /**
-     * API para obtener disponibilidad municipal via AJAX.
+     * API para obtener disponibilidad municipal 
      */
     public function apiDisponibilidad(Request $request)
     {
         $fecha = $request->get('fecha');
         $idRuta = $request->get('id_ruta');
 
-        if (!$fecha || !$idRuta) return response()->json([]);
+        if (!$fecha || !$idRuta)
+            return response()->json([]);
 
         $camiones = $this->asignacionService->obtenerCamionesDisponibles($fecha, $idRuta);
         $esProgramada = $this->asignacionService->esFechaProgramada($idRuta, $fecha);
 
+        // Obtener conductores disponibles (rol 6 y activos)
+        $conductores = Usuario::where('id_rol', 6)
+            ->where('activo', true)
+            ->get(['id_usuario', 'nombre']);
+
         return response()->json([
             'camiones' => $camiones,
+            'conductores' => $conductores,
             'es_programada' => $esProgramada
         ]);
     }
