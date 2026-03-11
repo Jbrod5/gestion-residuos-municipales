@@ -136,6 +136,10 @@ Route::group(['prefix' => 'operador', 'as' => 'operador.', 'middleware' => ['aut
 Route::group(['prefix' => 'auditor', 'as' => 'auditor.', 'middleware' => ['auth', 'role:5']], function () {
     Route::get('/dashboard', [\App\Http\Controllers\Auditor\AuditorController::class, 'index'])->name('dashboard');
     Route::get('/detalle/{tipo}/{id}', [\App\Http\Controllers\Auditor\AuditorController::class, 'show'])->name('show');
+    Route::get('/exportar/recoleccion', [App\Http\Controllers\Auditor\AuditorController::class, 'exportarRecoleccion'])->name('exportar.recoleccion');
+    Route::get('/exportar/denuncias', [App\Http\Controllers\Auditor\AuditorController::class, 'exportarDenuncias'])->name('exportar.denuncias');
+    Route::get('/exportar/reciclaje', [App\Http\Controllers\Auditor\AuditorController::class, 'exportarReciclaje'])->name('exportar.reciclaje');
+    Route::get('/exportar/completo', [App\Http\Controllers\Auditor\AuditorController::class, 'exportarCompleto'])->name('exportar.completo');
 });
 
 

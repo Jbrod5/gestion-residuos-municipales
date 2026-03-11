@@ -11,9 +11,17 @@ use App\Models\Contenedor;
 use App\Models\Denuncia;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Services\ReporteService;
 
 class AuditorController extends Controller
 {
+    protected $reporteService;
+
+    public function __construct(ReporteService $reporteService)
+    {
+        $this->reporteService = $reporteService;
+    }
+
     // vista principal de auditoria con graficas y tablas de fiscalizacion
     public function index(Request $request)
     {
@@ -71,6 +79,30 @@ class AuditorController extends Controller
         }
 
         abort(404);
+    }
+
+    /**
+     * Exportar recolecciones a CSV
+     */
+    public function exportarRecoleccion(Request $request)
+    {
+        return $this->reporteService->generarCSVRecoleccion($request->all());
+    }
+
+    /**
+     * Exportar denuncias a CSV
+     */
+    public function exportarDenuncias(Request $request)
+    {
+        return $this->reporteService->generarCSVDenuncias($request->all());
+    }
+
+    /**
+     * Exportar reciclaje a CSV
+     */
+    public function exportarReciclaje(Request $request)
+    {
+        return $this->reporteService->generarCSVReciclaje($request->all());
     }
 }
 
