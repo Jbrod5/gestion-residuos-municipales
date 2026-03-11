@@ -40,7 +40,7 @@ Route::group(['prefix' => 'ciudadano', 'as' => 'ciudadano.', 'middleware' => 'au
 });
 
 // Rutas para el Administrador Municipal
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], function () {
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'role:1']], function () {
     // Dashboard administrativo
     Route::get('/dashboard', [\App\Http\Controllers\Admin\AdminDenunciaController::class, 'dashboard'])->name('dashboard');
 
@@ -121,7 +121,14 @@ Route::group(['prefix' => 'coordinator', 'as' => 'coordinator.', 'middleware' =>
     // gestion de solicitudes de vaciado de puntos verdes
     Route::get('/solicitudes-vaciado', [\App\Http\Controllers\Coordinador\CoordinadorController::class, 'index'])->name('solicitudes.index');
     Route::post('/solicitudes-vaciado/{id_solicitud}/atender', [\App\Http\Controllers\Coordinador\CoordinadorController::class, 'atender'])->name('solicitudes.atender');
-});
+
+    //Denuncias
+    Route::get('/denuncias', [\App\Http\Controllers\Admin\AdminDenunciaController::class, 'index'])->name('denuncias.index');
+    Route::patch('/denuncias/{id_denuncia}/estado', [\App\Http\Controllers\Admin\AdminDenunciaController::class, 'updateStatus'])->name('denuncias.update');
+    Route::post('/denuncias/{id}/finalizar', [\App\Http\Controllers\Admin\AdminDenunciaController::class, 'finalizar'])->name('denuncias.finalizar');
+    Route::post('/asignaciones-denuncias', [\App\Http\Controllers\Admin\AsignacionController::class, 'store'])->name('asignaciones.store');
+
+    });
 
 // Rutas para el Operador de Punto Verde (Rol 3)
 Route::group(['prefix' => 'operador', 'as' => 'operador.', 'middleware' => ['auth', 'role:3']], function () {

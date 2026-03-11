@@ -1,9 +1,10 @@
-@extends('layouts.admin')
+{{-- Cambiar el layout de admin a coordinator --}}
+@extends('layouts.coordinator')  {{-- ANTES: layouts.admin --}}
 
 @section('content')
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>gestión global de denuncias</h2>
+        <h2>Gestión de Denuncias - Coordinador</h2>  {{-- Título más específico --}}
     </div>
 
     @if(session('success'))
@@ -25,11 +26,11 @@
                     <thead class="table-dark">
                         <tr>
                             <th>ID</th>
-                            <th>ciudadano</th>
-                            <th>tamaño</th>
-                            <th>estado actual</th>
-                            <th>fecha</th>
-                            <th>cambiar estado</th>
+                            <th>Ciudadano</th>
+                            <th>Tamaño</th>
+                            <th>Estado actual</th>
+                            <th>Fecha</th>
+                            <th>Acciones</th>  {{-- Cambiar título --}}
                         </tr>
                     </thead>
                     <tbody>
@@ -45,7 +46,8 @@
                                 </td>
                                 <td>{{ $denuncia->created_at->format('d/m/Y') }}</td>
                                 <td class="d-flex gap-2">
-                                    <form action="{{ route('admin.denuncias.update', $denuncia->id_denuncia) }}" method="POST" class="d-flex gap-2">
+                                    {{-- Cambiar route de admin a coordinator --}}
+                                    <form action="{{ route('coordinator.denuncias.update', $denuncia->id_denuncia) }}" method="POST" class="d-flex gap-2">
                                         @csrf
                                         @method('PATCH')
                                         <select name="id_estado_denuncia" class="form-select form-select-sm" required>
@@ -55,12 +57,12 @@
                                                 </option>
                                             @endforeach
                                         </select>
-                                        <button type="submit" class="btn btn-sm btn-outline-success">actualizar</button>
+                                        <button type="submit" class="btn btn-sm btn-outline-success">Actualizar</button>
                                     </form>
 
                                     @if($denuncia->id_estado_denuncia == 1 || $denuncia->id_estado_denuncia == 2)
                                         <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalAsignar{{ $denuncia->id_denuncia }}">
-                                            asignar cuadrilla
+                                            Asignar cuadrilla
                                         </button>
 
                                         <!-- Modal de Asignación -->
@@ -68,29 +70,30 @@
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header bg-primary text-white">
-                                                        <h5 class="modal-title">asignar cuadrilla a denuncia #{{ $denuncia->id_denuncia }}</h5>
+                                                        <h5 class="modal-title">Asignar cuadrilla a denuncia #{{ $denuncia->id_denuncia }}</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
-                                                    <form action="{{ route('admin.asignaciones.store') }}" method="POST">
+                                                    {{-- Cambiar route de admin a coordinator --}}
+                                                    <form action="{{ route('coordinator.asignaciones.store') }}" method="POST">
                                                         @csrf
                                                         <input type="hidden" name="id_denuncia" value="{{ $denuncia->id_denuncia }}">
                                                         <div class="modal-body">
                                                             <div class="mb-3">
-                                                                <label class="form-label">seleccione cuadrilla disponible</label>
+                                                                <label class="form-label">Seleccione cuadrilla disponible</label>
                                                                 <select name="id_cuadrilla" class="form-select" required>
-                                                                    <option value="" selected disabled>elija un equipo municipal</option>
+                                                                    <option value="" selected disabled>Elija un equipo municipal</option>
                                                                     @foreach($cuadrillasDisponibles as $cuadrilla)
                                                                         <option value="{{ $cuadrilla->id_cuadrilla }}">
                                                                             {{ $cuadrilla->nombre }} (Zona: {{ $cuadrilla->zona->nombre ?? 'N/A' }})
                                                                         </option>
                                                                     @endforeach
                                                                 </select>
-                                                                <small class="text-muted d-block mt-2">solo se muestran cuadrillas marcadas como disponibles</small>
+                                                                <small class="text-muted d-block mt-2">Solo se muestran cuadrillas marcadas como disponibles</small>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">cancelar</button>
-                                                            <button type="submit" class="btn btn-primary">confirmar asignación</button>
+                                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                                                            <button type="submit" class="btn btn-primary">Confirmar asignación</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -100,7 +103,7 @@
 
                                     @if($denuncia->id_estado_denuncia == 4)
                                         <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalFinalizar{{ $denuncia->id_denuncia }}">
-                                            finalizar denuncia
+                                            Finalizar denuncia
                                         </button>
 
                                         <!-- Modal de Finalización -->
@@ -108,21 +111,22 @@
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header bg-success text-white">
-                                                        <h5 class="modal-title">finalizar ciclo operativo #{{ $denuncia->id_denuncia }}</h5>
+                                                        <h5 class="modal-title">Finalizar ciclo operativo #{{ $denuncia->id_denuncia }}</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
-                                                    <form action="{{ route('admin.denuncias.finalizar', $denuncia->id_denuncia) }}" method="POST" enctype="multipart/form-data">
+                                                    {{-- Cambiar route de admin a coordinator --}}
+                                                    <form action="{{ route('coordinator.denuncias.finalizar', $denuncia->id_denuncia) }}" method="POST" enctype="multipart/form-data">
                                                         @csrf
                                                         <div class="modal-body">
                                                             <div class="mb-3">
-                                                                <label class="form-label fw-bold">evidencia visual (foto después)</label>
+                                                                <label class="form-label fw-bold">Evidencia visual (foto después)</label>
                                                                 <input type="file" name="foto_despues" class="form-control" accept="image/*" required>
-                                                                <small class="text-muted d-block mt-2">suba una imagen clara del lugar ya limpio</small>
+                                                                <small class="text-muted d-block mt-2">Suba una imagen clara del lugar ya limpio</small>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">cancelar</button>
-                                                            <button type="submit" class="btn btn-success">confirmar finalización</button>
+                                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                                                            <button type="submit" class="btn btn-success">Confirmar finalización</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -139,7 +143,10 @@
     </div>
     
     <div class="mt-4">
-        <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">volver al dashboard</a>
+        {{-- Cambiar a dashboard del coordinador --}}
+        <a href="{{ route('coordinator.dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Volver al dashboard
+        </a>
     </div>
 </div>
 @endsection

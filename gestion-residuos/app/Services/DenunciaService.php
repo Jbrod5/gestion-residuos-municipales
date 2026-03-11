@@ -108,41 +108,69 @@ class DenunciaService
     }
 
     /**
-     * finaliza la atención de una denuncia y libera a la cuadrilla asignada
-     */
-    public function finalizarDenuncia($id_denuncia, UploadedFile $fotoDespues)
-    {
-        return \Illuminate\Support\Facades\DB::transaction(function () use ($id_denuncia, $fotoDespues) {
-            $denuncia = Denuncia::findOrFail($id_denuncia);
-            
-            // Buscar la asignación activa municipal
+ * finaliza la atención de una denuncia y libera a la cuadrilla asignada
+ */
+public function finalizarDenuncia($id_denuncia, UploadedFile $fotoDespues)
+{
+    return \Illuminate\Support\Facades\DB::transaction(function () use ($id_denuncia, $fotoDespues) {
+        $denuncia = Denuncia::findOrFail($id_denuncia);
+        
+        // Buscar la asignación activa municipal (sin fecha_atencion)
+        $asignacion = \App\Models\AsignacionDenuncia::where('id_denuncia', $id_denuncia)
+            ->whereNull('fecha_atencion')
+            ->latest()
+            ->first();
+        
+        // Si no hay asignación activa, buscar cualquier asignación
+        if (!$asignacion) {
             $asignacion = \App\Models\AsignacionDenuncia::where('id_denuncia', $id_denuncia)
-                ->whereNull('fecha_atencion')
                 ->latest()
-                ->firstOrFail();
+                ->first();
+                
+            if (!$asignacion) {
+                // Si no existe ninguna asignación, crear una automática
+                // Buscar cualquier cuadrilla disponible
+                $cuadrilla = \App\Models\Cuadrilla::where('disponible', 1)->first();
+                
+                if (!$cuadrilla) {
+                    throw new \Exception('No hay cuadrillas disponibles para asignar a esta denuncia');
+                }
+                
+                // Crear asignación automática
+                $asignacion = \App\Models\AsignacionDenuncia::create([
+                    'id_denuncia' => $id_denuncia,
+                    'id_cuadrilla' => $cuadrilla->id_cuadrilla,
+                    'fecha_asignacion' => now(),
+                ]);
+                
+                // Marcar cuadrilla como no disponible
+                $cuadrilla->update(['disponible' => 0]);
+            }
+        }
 
-            $cuadrilla = \App\Models\Cuadrilla::findOrFail($asignacion->id_cuadrilla);
+        // Obtener la cuadrilla (puede ser de la asignación existente o la que acabamos de crear)
+        $cuadrilla = \App\Models\Cuadrilla::findOrFail($asignacion->id_cuadrilla);
 
-            // 1. Guardar evidencia visual del trabajo municipal
-            $fotoPath = $fotoDespues->store('denuncias/evidencia', 'public');
+        // 1. Guardar evidencia visual del trabajo municipal
+        $fotoPath = $fotoDespues->store('denuncias/evidencia', 'public');
 
-            // 2. Actualizar denuncia: marcar como 'Atendida' (ID 3) y subir foto
-            $denuncia->update([
-                'id_estado_denuncia' => 3,
-                'foto_despues' => $fotoPath
-            ]);
+        // 2. Actualizar denuncia: marcar como 'Atendida' (ID 3) y subir foto
+        $denuncia->update([
+            'id_estado_denuncia' => 3, // Atendida
+            'foto_despues' => $fotoPath
+        ]);
 
-            // 3. Liberar cuadrilla municipal para nuevos servicios
-            $cuadrilla->update([
-                'disponible' => 1
-            ]);
+        // 3. Liberar cuadrilla municipal para nuevos servicios
+        $cuadrilla->update([
+            'disponible' => 1
+        ]);
 
-            // 4. Registrar fecha de finalización en la asignación
-            $asignacion->update([
-                'fecha_atencion' => now()
-            ]);
+        // 4. Registrar fecha de finalización en la asignación
+        $asignacion->update([
+            'fecha_atencion' => now()
+        ]);
 
-            return true;
-        });
-    }
+        return true;
+    });
+}
 }
