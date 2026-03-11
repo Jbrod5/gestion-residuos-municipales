@@ -89,6 +89,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], fu
     // Dashboard de reportes con chartjs
     Route::get('/reportes', [\App\Http\Controllers\ReporteController::class, 'index'])->name('reportes.index');
     Route::get('/api/reportes', [\App\Http\Controllers\ReporteController::class, 'apiDatos'])->name('reportes.api');
+
+    // Gestión de Tipos de Residuo
+    Route::resource('tipos-residuo', \App\Http\Controllers\Admin\TipoResiduoController::class)
+        ->except(['show'])
+        ->parameters(['tipos-residuo' => 'id']);
+    Route::get('tipos-residuo/{id}', [\App\Http\Controllers\Admin\TipoResiduoController::class, 'show'])
+        ->name('tipos-residuo.show');
+
 });
 
 // Rutas para el Coordinador de Rutas (Módulo 1)

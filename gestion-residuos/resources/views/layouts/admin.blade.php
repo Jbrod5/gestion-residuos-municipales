@@ -77,7 +77,7 @@
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('admin.cuadrillas.*') ? 'active fw-bold text-white' : '' }}"
                             href="{{ route('admin.cuadrillas.index') }}">Cuadrillas</a>
-                            <li class="nav-item">
+                    <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('admin.puntos-verdes.*') ? 'active fw-bold text-white' : '' }}"
                             href="{{ route('admin.puntos-verdes.index') }}">Puntos Verdes</a>
                     </li>
@@ -88,9 +88,17 @@
                         </a>
                     </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('admin.tipos-residuo.*') ? 'active' : '' }}"
+                            href="{{ route('admin.tipos-residuo.index') }}">
+                            <i class="nav-icon fas fa-trash-alt"></i>
+                            <p>Tipos de Residuo</p>
+                        </a>
+                    </li>
 
 
-                    
+
+
                 </ul>
 
                 <div class="d-flex align-items-center">

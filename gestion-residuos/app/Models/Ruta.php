@@ -9,10 +9,10 @@ class Ruta extends Model
     protected $table = 'rutas';
     protected $primaryKey = 'id_ruta';
     protected $fillable = [
-        'id_zona', 
-        'id_tipo_residuo', 
-        'nombre', 
-        'poblacion_estimada', 
+        'id_zona',
+        'id_tipo_residuo',
+        'nombre',
+        'poblacion_estimada',
         'distancia_km',
         'latitud_inicio',
         'longitud_inicio',
@@ -34,8 +34,8 @@ class Ruta extends Model
     public function dias()
     {
         return $this->belongsToMany(DiaSemana::class, 'ruta_dia', 'id_ruta', 'id_dia_semana')
-                    ->withPivot('hora_inicio', 'hora_fin', 'id_ruta_dia')
-                    ->withTimestamps();
+            ->withPivot('hora_inicio', 'hora_fin', 'id_ruta_dia')
+            ->withTimestamps();
     }
 
     public function trayectorias()
@@ -54,5 +54,11 @@ class Ruta extends Model
     public function pesoTotalEstimadoKg()
     {
         return $this->puntosRecoleccion->sum('volumen_estimado_kg');
+    }
+
+    // app/Models/Ruta.php - Agrega este método
+    public function asignaciones()
+    {
+        return $this->hasMany(AsignacionRuta::class, 'id_ruta', 'id_ruta');
     }
 }
