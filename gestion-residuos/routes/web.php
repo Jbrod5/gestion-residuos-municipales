@@ -107,6 +107,22 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'r
     Route::get('tipos-residuo/{id}', [\App\Http\Controllers\Admin\TipoResiduoController::class, 'show'])
         ->name('tipos-residuo.show');
 
+    // Zonas:
+
+    Route::prefix('zonas')->name('zonas.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\ZonaController::class, 'index'])->name('index');
+        Route::post('/', [App\Http\Controllers\Admin\ZonaController::class, 'storeZona'])->name('store');
+
+
+        Route::post('/tipo', [App\Http\Controllers\Admin\ZonaController::class, 'storeTipoZona'])->name('tipos-zona.store');
+
+        Route::delete('/{id}', [App\Http\Controllers\Admin\ZonaController::class, 'destroyZona'])->name('destroy');
+
+        // APIs para mapa
+        Route::get('/api', [App\Http\Controllers\Admin\ZonaController::class, 'apiZonas'])->name('api');
+        Route::get('/api/{id}', [App\Http\Controllers\Admin\ZonaController::class, 'apiZona'])->name('api.zona');
+    });
+
 });
 
 // Rutas para el Coordinador de Rutas (Módulo 1)
@@ -138,7 +154,7 @@ Route::group(['prefix' => 'coordinator', 'as' => 'coordinator.', 'middleware' =>
     Route::post('/denuncias/{id}/finalizar', [\App\Http\Controllers\Admin\AdminDenunciaController::class, 'finalizar'])->name('denuncias.finalizar');
     Route::post('/asignaciones-denuncias', [\App\Http\Controllers\Admin\AsignacionController::class, 'store'])->name('asignaciones.store');
 
-    });
+});
 
 // Rutas para el Operador de Punto Verde (Rol 3)
 Route::group(['prefix' => 'operador', 'as' => 'operador.', 'middleware' => ['auth', 'role:3']], function () {

@@ -67,13 +67,18 @@
                         </a>
                     </li>
 
-                    <!-- Configuración -->
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('admin.tipos-residuo.*') ? 'active fw-bold text-warning' : 'text-white-50' }}" 
-                           href="{{ route('admin.tipos-residuo.index') }}">
-                           <i class="bi bi-tag me-1"></i>Tipos de Residuo
-                        </a>
-                    </li>
+<!-- Configuración -->
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle {{ request()->routeIs('admin.tipos-residuo.*') || request()->routeIs('admin.zonas.*') ? 'active fw-bold text-warning' : 'text-white-50' }}" 
+       href="#" role="button" data-bs-toggle="dropdown">
+       <i class="bi bi-gear me-1"></i>Configuración
+    </a>
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item {{ request()->routeIs('admin.tipos-residuo.*') ? 'active' : '' }}" href="{{ route('admin.tipos-residuo.index') }}">Tipos de Residuo</a></li>
+        <li><a class="dropdown-item {{ request()->routeIs('admin.zonas.*') ? 'active' : '' }}" href="{{ route('admin.zonas.index') }}">Zonas</a></li>
+    </ul>
+</li>
+                    
 
                     <!-- Reportes -->
                     <li class="nav-item">
