@@ -9,6 +9,16 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+// ===== RUTAS PÚBLICAS (SIN AUTENTICACIÓN) =====
+Route::get('/mapa-recoleccion', [App\Http\Controllers\Publico\MapaController::class, 'mapaRecoleccion'])->name('publico.mapa');
+Route::get('/puntos-verdes-publico', [App\Http\Controllers\Publico\MapaController::class, 'puntosVerdes'])->name('publico.puntos');
+
+// APIs públicas
+Route::get('/publico/rutas', [App\Http\Controllers\Publico\MapaController::class, 'apiRutas'])->name('publico.api.rutas');
+Route::get('/publico/puntos-verdes', [App\Http\Controllers\Publico\MapaController::class, 'apiPuntosVerdes'])->name('publico.api.puntos');
+
+
+
 // Rutas de Autenticación
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);

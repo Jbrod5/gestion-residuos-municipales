@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.publico')
 
 @section('content')
 <div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
@@ -36,6 +36,20 @@
                     <span class="text-muted">¿No tienes cuenta?</span> <a href="{{ route('register') }}" class="text-decoration-none fw-bold">Regístrate</a>
                 </div>
             </form>
+
+            <!-- Enlaces de puntos y rutas -->
+            <hr class="my-4">
+            <div class="text-center">
+                <p class="text-muted mb-2">¿Quieres consultar sin iniciar sesión?</p>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                    <a href="{{ route('publico.mapa') }}" class="btn btn-outline-success me-md-2">
+                        <i class="bi bi-map me-1"></i>Ver rutas
+                    </a>
+                    <a href="{{ route('publico.puntos') }}" class="btn btn-outline-info">
+                        <i class="bi bi-recycle me-1"></i>Ver puntos verdes
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
