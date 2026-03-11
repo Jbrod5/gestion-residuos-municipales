@@ -14,7 +14,7 @@
                             <h5 class="card-title">denuncias ciudadanas</h5>
                             <p class="display-4 fw-bold text-primary">{{ $totalDenuncias }}</p>
                             <p class="text-muted small">reportes totales en el sistema</p>
-                            <a href="{{ route('admin.denuncias.index') }}" class="btn btn-primary w-100">gestionar reportes</a>
+                            <a href="{{ route('admin.reportes.index') }}" class="btn btn-primary w-100">gestionar reportes</a>
                         </div>
                     </div>
                 </div>
