@@ -173,7 +173,8 @@ Route::group(['prefix' => 'auditor', 'as' => 'auditor.', 'middleware' => ['auth'
     Route::get('/exportar/denuncias', [App\Http\Controllers\Auditor\AuditorController::class, 'exportarDenuncias'])->name('exportar.denuncias');
     Route::get('/exportar/reciclaje', [App\Http\Controllers\Auditor\AuditorController::class, 'exportarReciclaje'])->name('exportar.reciclaje');
     Route::get('/exportar/completo', [App\Http\Controllers\Auditor\AuditorController::class, 'exportarCompleto'])->name('exportar.completo');
-});
+Route::get('/api/datos', [\App\Http\Controllers\Auditor\AuditorController::class, 'apiDatos'])->name('api.datos');
+    });
 
 
 // Rutas para el Conductor (Rol 6)
