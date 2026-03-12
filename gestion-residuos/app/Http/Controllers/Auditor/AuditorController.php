@@ -12,6 +12,8 @@ use App\Models\Denuncia;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Services\ReporteService;
+use App\Models\Zona;
+use Illuminate\Support\Facades\DB;
 
 class AuditorController extends Controller
 {
@@ -103,6 +105,69 @@ class AuditorController extends Controller
     public function exportarReciclaje(Request $request)
     {
         return $this->reporteService->generarCSVReciclaje($request->all());
+    }
+
+    // Agregar este método
+    public function apiDatos(Request $request)
+    {
+        $fechaInicio = $request->query('desde', Carbon::now()->subMonth()->format('Y-m-d'));
+        $fechaFin = $request->query('hasta', Carbon::now()->format('Y-m-d'));
+
+        $basuraPorZona = Zona::with('rutas')
+            ->get()
+            ->map(function ($zona) {
+                $kg = $zona->rutas->sum('basura_total_estimada');
+                return [
+                    'zona' => $zona->nombre,
+                    'toneladas' => round($kg / 1000, 2),
+                ];
+            });
+
+        $materialReciclado = EntregaReciclaje::select(
+            'id_material',
+            DB::raw('SUM(cantidad_kg) as total_kg')
+        )
+            ->whereBetween('fecha', [$fechaInicio, $fechaFin])
+            ->groupBy('id_material')
+            ->with('material')
+            ->get()
+            ->map(function ($entrega) {
+                return [
+                    'material' => $entrega->material->nombre,
+                    'kg' => $entrega->total_kg,
+                ];
+            });
+
+        $denuncias = Denuncia::with('estado')
+            ->whereBetween('fecha', [$fechaInicio, $fechaFin])
+            ->get();
+
+        $porDia = [];
+        foreach ($denuncias as $denuncia) {
+            $dia = Carbon::parse($denuncia->fecha)->format('Y-m-d');
+            if (!isset($porDia[$dia])) {
+                $porDia[$dia] = ['recibidas' => 0, 'atendidas' => 0];
+            }
+            $porDia[$dia]['recibidas']++;
+            if ($denuncia->estado && $denuncia->estado->nombre === 'Atendida') {
+                $porDia[$dia]['atendidas']++;
+            }
+        }
+
+        ksort($porDia);
+        $fechas = array_keys($porDia);
+        $recibidas = array_column($porDia, 'recibidas');
+        $atendidas = array_column($porDia, 'atendidas');
+
+        return response()->json([
+            'basuraPorZona' => $basuraPorZona,
+            'materialReciclado' => $materialReciclado,
+            'denunciasSerie' => [
+                'fechas' => $fechas,
+                'recibidas' => $recibidas,
+                'atendidas' => $atendidas,
+            ],
+        ]);
     }
 }
 

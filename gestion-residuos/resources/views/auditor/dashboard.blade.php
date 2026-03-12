@@ -297,7 +297,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    fetch('{{ route('admin.reportes.api') }}?desde={{ $fechaInicio }}&hasta={{ $fechaFin }}')
+    fetch('{{ route('auditor.api.datos') }}?desde={{ $fechaInicio }}&hasta={{ $fechaFin }}')
         .then(r => r.json())
         .then(data => {
             // Gráfico de basura por zona
